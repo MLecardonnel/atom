@@ -1,0 +1,50 @@
+---------------------------------------------
+				Requirements
+---------------------------------------------
+
+Before executing the application, you need to install :
+
+- Python3
+- Tkinter
+- Matplotlib
+- Numpy
+
+To execute the application you need 4 files :
+
+- changLang.py
+- interface.py
+- readFile.py
+- l-english
+- l-french
+- l-russian
+
+
+---------------------------------------------
+				Commands
+---------------------------------------------
+
+To start the application :
+
+- open a terminal in "mumu"
+- execute the command : python3 interface
+
+
+---------------------------------------------
+		How to use the application
+---------------------------------------------
+
+At the top of the application, you have 4 buttons which open
+4 pages.
+
+The first one is the home page. You can choose the language
+between english, french and russian. By default, it's in english.
+
+The second page is for selecting the file. You can only
+select a .dat file and the file need to have a particular
+construction.
+
+The third and fourth pages are plots but you can't open them
+if you haven't chosen a file. In the first one, you
+plot particles with a specific velocity and show their positions.
+You can change the face and range of the values. The second one is
+a histogram. You can save those plots whenever you want.
