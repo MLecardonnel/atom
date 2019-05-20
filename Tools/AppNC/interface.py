@@ -336,6 +336,9 @@ class InterfaceGraphe():
 		self.root.bind('<Return>', self.changeDataFileButton)
 		
 		valid.grid(row = 6, column = 0, padx=10, pady=2,sticky=W)
+		
+		self.loading1 = Label(self.can_data)
+		self.loading1.grid(row = 7, column = 0,padx=10, pady=1,sticky=W)
 
 
 		# Canvas de Plot 2D
@@ -414,6 +417,9 @@ class InterfaceGraphe():
 		valid.bind('<Button-1>', self.plotPartButton)
 		valid.grid(row = 17, column = 1,padx = 10,pady=2,sticky=W)
 
+		self.loading2 = Label(self.menuFig)
+		self.loading2.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
+
 		saveCanvas = Canvas(self.menuFig, highlightthickness=0)
 
 		label = Label(saveCanvas, text = self.language[tmp])
@@ -427,7 +433,7 @@ class InterfaceGraphe():
 		tmp += 1
 		saveBut.grid(row = 2, column =1,pady=1,sticky=W)
 
-		saveCanvas.grid(row = 18, column = 1,padx = 10,pady=50,sticky=W)
+		saveCanvas.grid(row = 19, column = 1,padx = 10,pady=50,sticky=W)
 
 		self.createPlot()
 
@@ -488,6 +494,9 @@ class InterfaceGraphe():
 		self.errorDelta = Label(self.menuFig,fg='red')
 		self.errorDelta.grid(row = 16, column = 1,padx=10, pady=1,sticky=W)
 
+		self.loading = Label(self.menuFig)
+		self.loading.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
+
 		self.createPlot()
 
 		# Canvas de l'histogramme
@@ -521,6 +530,8 @@ class InterfaceGraphe():
 
 
 	def createPlot(self):
+		self.loading2['text'] = " Loading..."
+		self.loading2.update()
 		try:
 			self.slice = float(self.sliceValue.get())
 			self.Dslice = float(self.deltaValue.get())
@@ -529,7 +540,6 @@ class InterfaceGraphe():
 
 		except:
 			pass
-
 		plt.figure(1)
 		plt.clf()
 
@@ -593,6 +603,7 @@ class InterfaceGraphe():
 
 		self.nb_label['text'] = self.language[21] + str(self.nb)
 		self.graph.draw()
+		self.loading2['text'] = ""
 
 
 
@@ -619,6 +630,8 @@ class InterfaceGraphe():
 
 
 	def changeDataFileButton(self,event):
+		self.loading1['text'] = "Loading..."
+		self.loading1.update()
 
 		verif1 = False
 		verif2 = False
@@ -660,6 +673,7 @@ class InterfaceGraphe():
 			self.labelMin['text'] = self.language[9] + str(self.min) + self.language[33]
 			self.labelMax['text'] = self.language[10] + str(self.max) + self.language[33]
 			self.suiteCanvas()
+		self.loading1['text'] = ""
 			
 
 
