@@ -25,11 +25,15 @@ def readFilePartNC(nameFile, n):
 			tabPart[1] = ma.getdata(mumu.variables["Coordinates_y0"][:])
 			tabPart[2] = ma.getdata(mumu.variables["Coordinates_z0"][:])
 			energy = np.ones(part,dtype = 'd')
+			velocity = np.zeros(part,dtype = 'd')
 			Imp_x=abs(ma.getdata(mumu.variables["Impulses_x0"][:]))
 			Imp_y=abs(ma.getdata(mumu.variables["Impulses_y0"][:]))
 			Imp_z=abs(ma.getdata(mumu.variables["Impulses_z0"][:]))
 			for i in range(0,part):
-				energy[i]=1+Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				energy[i] += p
+				velocity[i] = math.sqrt((p)/(p+1))
+				
 
 		elif (n == 2) :
 			print("Second Sort of Particules") 
@@ -40,11 +44,14 @@ def readFilePartNC(nameFile, n):
 			tabPart[1] = ma.getdata(mumu.variables["Coordinates_y1"][:])
 			tabPart[2] = ma.getdata(mumu.variables["Coordinates_z1"][:])
 			energy = np.ones(part,dtype = 'd')
+			velocity = np.zeros(part,dtype = 'd')
 			Imp_x=abs(ma.getdata(mumu.variables["Impulses_x1"][:]))
 			Imp_y=abs(ma.getdata(mumu.variables["Impulses_y1"][:]))
 			Imp_z=abs(ma.getdata(mumu.variables["Impulses_z1"][:]))
 			for i in range(0,part):
-				energy[i]=1+Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				energy[i] += p
+				velocity[i] = math.sqrt((p)/(p+1))
 
 		elif (n == 3) :
 			print("Third Sort of Particules")
@@ -55,11 +62,14 @@ def readFilePartNC(nameFile, n):
 			tabPart[1] = ma.getdata(mumu.variables["Coordinates_y2"][:])
 			tabPart[2] = ma.getdata(mumu.variables["Coordinates_z2"][:])
 			energy = np.ones(part,dtype = 'd')
+			velocity = np.zeros(part,dtype = 'd')
 			Imp_x=abs(ma.getdata(mumu.variables["Impulses_x2"][:]))
 			Imp_y=abs(ma.getdata(mumu.variables["Impulses_y2"][:]))
 			Imp_z=abs(ma.getdata(mumu.variables["Impulses_z2"][:]))
 			for i in range(0,part):
-				energy[i]=1+Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				energy[i] += p
+				velocity[i] = math.sqrt((p)/(p+1))
 
 		elif (n == 4) :
 			print("All Sorts of Particules")
@@ -69,37 +79,47 @@ def readFilePartNC(nameFile, n):
 			tabPart1[1] = ma.getdata(mumu.variables["Coordinates_y0"][:])
 			tabPart1[2] = ma.getdata(mumu.variables["Coordinates_z0"][:])
 			energy1 = np.ones(part1,dtype = 'd')
+			velocity1 = np.zeros(part1,dtype = 'd')
 			Imp_x1=abs(ma.getdata(mumu.variables["Impulses_x0"][:]))
 			Imp_y1=abs(ma.getdata(mumu.variables["Impulses_y0"][:]))
 			Imp_z1=abs(ma.getdata(mumu.variables["Impulses_z0"][:]))
 			for i in range(0,part1):
-				energy1[i]=1+Imp_x1[i]**2+Imp_y1[i]**2+Imp_z1[i]**2
+				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				energy1[i] += p
+				velocity1[i] = math.sqrt((p)/(p+1))
 			part2 = mumu.variables["Coordinates_x1"].size
 			tabPart2 = np.zeros((3,part2),dtype = 'd')
 			tabPart2[0] = ma.getdata(mumu.variables["Coordinates_x1"][:])
 			tabPart2[1] = ma.getdata(mumu.variables["Coordinates_y1"][:])
 			tabPart2[2] = ma.getdata(mumu.variables["Coordinates_z1"][:])
 			energy2 = np.ones(part2,dtype = 'd')
+			velocity2 = np.zeros(part2,dtype = 'd')
 			Imp_x2=abs(ma.getdata(mumu.variables["Impulses_x1"][:]))
 			Imp_y2=abs(ma.getdata(mumu.variables["Impulses_y1"][:]))
 			Imp_z2=abs(ma.getdata(mumu.variables["Impulses_z1"][:]))
 			for i in range(0,part2):
-				energy2[i]=1+Imp_x2[i]**2+Imp_y2[i]**2+Imp_z2[i]**2
+				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				energy2[i] += p
+				velocity2[i] = math.sqrt((p)/(p+1))
 			part3 = mumu.variables["Coordinates_x2"].size
 			tabPart3 = np.zeros((3,part3),dtype = 'd')
 			tabPart3[0] = ma.getdata(mumu.variables["Coordinates_x2"][:])
 			tabPart3[1] = ma.getdata(mumu.variables["Coordinates_y2"][:])
 			tabPart3[2] = ma.getdata(mumu.variables["Coordinates_z2"][:])
 			energy3 = np.ones(part3,dtype = 'd')
+			velocity3 = np.zeros(part3,dtype = 'd')
 			Imp_x3=abs(ma.getdata(mumu.variables["Impulses_x2"][:]))
 			Imp_y3=abs(ma.getdata(mumu.variables["Impulses_y2"][:]))
 			Imp_z3=abs(ma.getdata(mumu.variables["Impulses_z2"][:]))
 			for i in range(0,part3):
-				energy3[i]=1+Imp_x3[i]**2+Imp_y3[i]**2+Imp_z3[i]**2
+				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				energy3[i] += p
+				velocity3[i] = math.sqrt((p)/(p+1))
 			part=part1+part2+part3
 			print("Size : ",part)
 			tabPart = np.concatenate((np.concatenate((tabPart1,tabPart2),axis=1),tabPart3),axis=1)
 			energy = np.concatenate((np.concatenate((energy1,energy2),axis=0),energy3),axis=0)
+			velocity = np.concatenate((np.concatenate((velocity1,velocity2),axis=0),velocity3),axis=0)
 
 
 	
@@ -110,7 +130,7 @@ def readFilePartNC(nameFile, n):
 		mumu.close()
 		print("OK")
 	
-		return (part,tabPart,energy)
+		return (part,tabPart,energy,velocity)
 
 def createFormatInt8(size):
 	form = "<l"
@@ -274,6 +294,7 @@ def readFilePartDat(nameFile, n):
 	
 			tabPart = np.zeros((3,size),dtype = 'd')
 			energy = np.ones(size,dtype = 'd')
+			velocity = np.zeros(size,dtype = 'd')
 			form = createFormatInt8(size)
 	
 			for x in range(0,6):
@@ -287,10 +308,13 @@ def readFilePartDat(nameFile, n):
 				elif x == 3 or x == 4:
 					for i in range(0,size):
 						energy[i]+=struct3[tmp]**2
+						velocity[i] += struct3[tmp]**2
 						tmp+=1
 				else:
 					for i in range(0,size):
 						energy[i]+=struct3[tmp]**2
+						p = velocity[i] + struct3[tmp]**2
+						velocity[i] = math.sqrt((p)/(p+1))
 						tmp+=1
 	
 	except IOError:
@@ -300,13 +324,13 @@ def readFilePartDat(nameFile, n):
 		f.close()
 		print("OK")
 	
-		return (size,tabPart, energy)
+		return (size,tabPart,energy,velocity)
 
 def readFilePart(nameFile, n):
 	if (nameFile.split(".")[1]=="nc"):
-		[part,tabPart,energy]=readFilePartNC(nameFile, n)
+		[part,tabPart,energy,velocity]=readFilePartNC(nameFile, n)
 	elif (nameFile.split(".")[1]=="dat"):
-		[part,tabPart,energy]=readFilePartDat(nameFile, n)
-	return (part,tabPart,energy)
+		[part,tabPart,energy,velocity]=readFilePartDat(nameFile, n)
+	return (part,tabPart,energy,velocity)
 
 

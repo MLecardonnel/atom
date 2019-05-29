@@ -27,7 +27,7 @@ class InterfaceGraphe():
 	def __init__(self):
 
 		self.root = Tk()
-		self.root.title('Mon application')
+		self.root.title('Particules Application')
 		self.root.protocol('WM_DELETE_WINDOW', self.root.quit)
 		self.root.resizable(width=False, height=False)
 
@@ -99,14 +99,23 @@ class InterfaceGraphe():
 		self.nb_part_file = 0
 		self.max = 0
 		self.min = 0
+		self.maxvel = 0
+		self.minvel = 0
 
 		self.slice = 0.0
 		self.Dslice = 0.0
 		self.actualSlice = ''
 		self.nb = 0
 
+		self.slicevel = 0.0
+		self.Dslicevel = 0.0
+		self.actualSlicevel = ''
+		self.nbvel = 0
+
 		self.Axis1=0.0
 		self.Axis2=1.0
+		self.Axis1vel=0.0
+		self.Axis2vel=1.0
 
 		self.scalevalue = 10
 
@@ -120,11 +129,13 @@ class InterfaceGraphe():
 		self.parttab = 0
 		self.tabPart = []
 		self.energy = []
+		self.velocity = []
 
 		# Graph
 
 		fig = plt.figure(figsize=(12, 7), dpi=96)
 		fig2 = plt.figure(figsize=(12, 6), dpi=96)
+		fig3 = plt.figure(figsize=(12, 7), dpi=96)
 
 
 
@@ -178,6 +189,8 @@ class InterfaceGraphe():
 
 		self.can_histo = Canvas(self.root, highlightthickness=0)
 
+		self.can_plotvel = Canvas(self.root, highlightthickness=0)
+
 		self.can_help = Canvas(self.root, highlightthickness=0)
 
 
@@ -198,6 +211,7 @@ class InterfaceGraphe():
 		self.entete_histo = Label(self.title,text = self.language[tmp], font=(None, 15))
 		tmp += 1
 
+		self.entete_plotvel = Label(self.title,text = "Plot Velocity", font=(None, 15))
 
 		self.entete_help = Label(self.title,text = self.language[tmp], font=(None, 15))
 		tmp += 1
@@ -224,14 +238,23 @@ class InterfaceGraphe():
 		tmp += 1
 		self.labelNumber.grid(row = 1, column = 1,padx=10, pady=1,sticky=W)
 
-		self.labelMin = Label(self.file, text = self.language[tmp] + str(self.min) + self.language[tmp_unit])
-		tmp += 1
+		self.labelenergy = Label(self.file, text = "Energy")
+		self.labelenergy.grid(row = 2, column = 1,padx=10, pady=1,sticky=W)
 
-		self.labelMin.grid(row = 2, column = 1,padx=10, pady=1,sticky=W)
+		self.labelvelocity = Label(self.file, text = "Velocity")
+		self.labelvelocity.grid(row = 2, column = 2,padx=10, pady=1,sticky=W)
+
+		self.labelMin = Label(self.file, text = self.language[tmp] + str(self.min) + self.language[tmp_unit])
+		self.labelMinvel = Label(self.file, text = self.language[tmp] + str(self.minvel) + "cm/s")
+		tmp += 1
+		self.labelMin.grid(row = 3, column = 1,padx=10, pady=1,sticky=W)
+		self.labelMinvel.grid(row = 3, column = 2,padx=10, pady=1,sticky=W)
 
 		self.labelMax = Label(self.file, text = self.language[tmp] + str(self.max) + self.language[tmp_unit])
+		self.labelMaxvel = Label(self.file, text = self.language[tmp] + str(self.maxvel) + "cm/s")
 		tmp += 1
-		self.labelMax.grid(row = 3, column = 1,padx=10, pady=1,sticky=W)
+		self.labelMax.grid(row = 4, column = 1,padx=10, pady=1,sticky=W)
+		self.labelMaxvel.grid(row = 4, column = 2,padx=10, pady=1,sticky=W)
 
 
 		# Les boutons pour Menu
@@ -240,22 +263,26 @@ class InterfaceGraphe():
 		tmp += 1
 		bou1.grid(row=1, column=1,padx=2, pady=2,sticky=W)
 
-		bou1 = ttk.Button(self.menu, text=self.language[tmp], width = 15, command = self.changeDataFile)
+		bou2 = ttk.Button(self.menu, text=self.language[tmp], width = 15, command = self.changeDataFile)
 		tmp += 1
-		bou1.grid(row=1, column=2,padx=2, pady=2,sticky=W)
+		bou2.grid(row=1, column=2,padx=2, pady=2,sticky=W)
 
-		bou2 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
+		bou3 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
 		tmp+=1
-		bou2.bind("<Button-1>", self.plotPart)
-		bou2.grid(row=1, column=3,padx=2, pady=2,sticky=W)
+		bou3.bind("<Button-1>", self.plotPart)
+		bou3.grid(row=1, column=3,padx=2, pady=2,sticky=W)
 
 		bou4 = ttk.Button(self.menu, text=self.language[tmp], width = 15, command = self.histo)
 		tmp += 1
 		bou4.grid(row=1, column=5,padx=2, pady=2,sticky=W)
 
-		bou5 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
-		tmp += 1
+		bou5 = ttk.Button(self.menu, text="Plot Velocity", width = 15)
+		bou5.bind("<Button-1>", self.plotPartVel)
 		bou5.grid(row=1, column=6,padx=2, pady=2,sticky=W)
+
+		bou6 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
+		tmp += 1
+		bou6.grid(row=1, column=7,padx=2, pady=2,sticky=W)
 
 
 		# Canvas de Home
@@ -392,7 +419,7 @@ class InterfaceGraphe():
 		tmp += 1
 		label2.grid(row = 9, column = 1,padx=10, pady=1,sticky=W)
 
-		self.sliceValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.0000000001, length=250, from_=self.min, to=self.max)
+		self.sliceValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.000000000000001, length=250, from_=self.min, to=self.max)
 		self.sliceValue.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
 
 		self.errorenergy = Label(self.menuFig,fg='red')
@@ -404,7 +431,7 @@ class InterfaceGraphe():
 		label3.grid(row = 13, column = 1,padx=10, pady=1,sticky=W)
 
 
-		self.deltaValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.0000000001, length=250, from_=self.min, to=self.max)
+		self.deltaValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.000000000000001, length=250, from_=self.min, to=self.max)
 		self.deltaValue.grid(row = 15,column = 1,padx=10, pady=1,sticky=W)
 
 
@@ -472,30 +499,128 @@ class InterfaceGraphe():
 		slide.grid(row = 1, column = 0)
 
 		self.menuFig_2.pack(side = "right")
+
+
+		# Canvas de Plot Velocity
+
+		fig3 = plt.figure(3)
+		self.graphvel = FigureCanvasTkAgg(fig3, master = self.can_plotvel)
+		self.graphvel.get_tk_widget().pack(side='left', fill='both', expand=1, pady = 10)
+
+		self.menuFigVel = Canvas(self.can_plotvel, width = 300, highlightthickness=0)
+		self.menuFigVel.pack(side='right', fill='both', expand=1)
+
+		self.nb_labelvel = Label(self.menuFigVel, text = "Particules find" + str(self.nb))
+		#tmp += 1
+		self.nb_labelvel.grid(row=0,column=1, padx=10, pady=10,sticky=W)
+
+		radio = Canvas(self.menuFigVel)
+
+		label = Label(radio, text="Face : ")
+		#tmp += 1
+		label.grid(row=1,column=1)
+
+		x = Radiobutton (radio, text="X", variable = self.boxe_prise_2, value = "x", command=self.SliceFace)
+		y = Radiobutton (radio, text="Y", variable = self.boxe_prise_2, value = "y", command=self.SliceFace)
+		z = Radiobutton (radio, text="Z", variable = self.boxe_prise_2, value = "z", command=self.SliceFace)
+
+		x.grid(row=1,column=2)
+		y.grid(row=1,column=3)
+		z.grid(row=1,column=4)
+
+		radio.grid(row = 1, column = 1,padx=10, pady=10,sticky=W)
+
+		self.errorRadiovel = Label(self.menuFig,fg='red')
+		self.errorRadiovel.grid(row = 2, column = 1,padx=10, pady=1,sticky=W)
+
+
+		label1 = Label(self.menuFigVel, text = "Slice selection :")
+		label1.grid(row = 3, column = 1,padx=10, pady=1,sticky=W)
+
+		self.sliceAxis1vel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.00001, length=250, from_=0.0, to=1.2)
+		self.sliceAxis1vel.grid(row = 5,column = 1,padx=10, pady=1,sticky=W)
+
+		self.sliceAxis2vel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.00001, length=250, from_=0.0, to=1.2)
+		self.sliceAxis2vel.grid(row = 7,column = 1,padx=10, pady=1,sticky=W)
+
+		self.errorAxisvel = Label(self.menuFigVel,fg='red')
+		self.errorAxisvel.grid(row = 8, column = 1,padx=10, pady=1,sticky=W)
+
+
+
+		label2 = Label(self.menuFigVel, text = "Velocity from :")
+		#tmp += 1
+		label2.grid(row = 9, column = 1,padx=10, pady=1,sticky=W)
+
+		self.sliceValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.0000000001, length=250, from_=self.minvel, to=self.maxvel)
+		self.sliceValuevel.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
+
+		self.errorvelocity = Label(self.menuFigVel,fg='red')
+		self.errorvelocity.grid(row = 12, column = 1,padx=10, pady=1,sticky=W)
+
+
+		label3 = Label(self.menuFigVel, text ="to :")
+		#tmp += 1
+		label3.grid(row = 13, column = 1,padx=10, pady=1,sticky=W)
+
+
+		self.deltaValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.0000000001, length=250, from_=self.minvel, to=self.maxvel)
+		self.deltaValuevel.grid(row = 15,column = 1,padx=10, pady=1,sticky=W)
+
+
+		self.errorDeltavel = Label(self.menuFigVel,fg='red')
+		self.errorDeltavel.grid(row = 16, column = 1,padx=10, pady=1,sticky=W)
+	
+		valid = Button(self.menuFigVel, text = "OK", width = 10)
+		#tmp += 1
+		self.root.bind('<Return>', self.plotPartButtonVel)
+		valid.bind('<Button-1>', self.plotPartButtonVel)
+		valid.grid(row = 17, column = 1,padx = 10,pady=2,sticky=W)
+
+		self.loading2vel = Label(self.menuFigVel)
+		self.loading2vel.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
+
+		saveCanvas = Canvas(self.menuFigVel, highlightthickness=0)
+
+		label = Label(saveCanvas, text = "Save as")
+		#tmp += 1
+		label.grid(row = 0, column = 1,pady=1,sticky=W)
+
+		self.saveName1Vel = Entry(saveCanvas)
+		self.saveName1Vel.grid(row = 1, column = 1,pady=1,sticky=W)
+
+		saveBut = ttk.Button(saveCanvas, text="Save", width = 15, command = self.savePlt)
+		#tmp += 1
+		saveBut.grid(row = 2, column =1,pady=1,sticky=W)
+
+		saveCanvas.grid(row = 19, column = 1,padx = 10,pady=50,sticky=W)
+
+		self.createPlotVel()
 		
 
 	def suiteCanvas(self):
+
 		# Canvas de Plot 2D
 
 		self.errorAxis = Label(self.menuFig,fg='red')
 		self.errorAxis.grid(row = 8, column = 1,padx=10, pady=1,sticky=W)
 
-		self.sliceValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.0000000001, length=250, from_=self.min, to=self.max)
+		self.sliceValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.000000000000001, length=250, from_=self.min, to=self.max)
 		self.sliceValue.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
 
 		self.errorenergy = Label(self.menuFig,fg='red')
 		self.errorenergy.grid(row = 12, column = 1,padx=10, pady=1,sticky=W)
 
 
-		self.deltaValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.0000000001, length=250, from_=self.min, to=self.max)
+		self.deltaValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.000000000000001, length=250, from_=self.min, to=self.max)
 		self.deltaValue.grid(row = 15,column = 1,padx=10, pady=1,sticky=W)
 
 
 		self.errorDelta = Label(self.menuFig,fg='red')
 		self.errorDelta.grid(row = 16, column = 1,padx=10, pady=1,sticky=W)
 
-		self.loading = Label(self.menuFig)
-		self.loading.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
+		self.loading2 = Label(self.menuFig)
+		self.loading2.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
 
 		self.createPlot()
 
@@ -517,16 +642,46 @@ class InterfaceGraphe():
 
 		self.menuFig_2.pack(side = "right")
 
+		# Canvas de Plot Velocity
+
+		self.errorAxisvel = Label(self.menuFigVel,fg='red')
+		self.errorAxisvel.grid(row = 8, column = 1,padx=10, pady=1,sticky=W)
+
+		self.sliceValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.000000000001, length=250, from_=self.minvel, to=self.maxvel)
+		self.sliceValuevel.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
+
+		self.errorvelocity = Label(self.menuFigVel,fg='red')
+		self.errorvelocity.grid(row = 12, column = 1,padx=10, pady=1,sticky=W)
+
+
+		self.deltaValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.000000000001, length=250, from_=self.minvel, to=self.maxvel)
+		self.deltaValuevel.grid(row = 15,column = 1,padx=10, pady=1,sticky=W)
+
+
+		self.errorDeltavel = Label(self.menuFigVel,fg='red')
+		self.errorDeltavel.grid(row = 16, column = 1,padx=10, pady=1,sticky=W)
+
+		self.loading2vel = Label(self.menuFigVel)
+		self.loading2vel.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
+
+		self.createPlotVel()
+
 	def SliceFace(self):
 		if (self.boxe_prise_2.get() == 'x'):
 			self.sliceAxis1.configure(from_=0.0, to=1.2)
 			self.sliceAxis2.configure(from_=0.0, to=1.2)
+			self.sliceAxis1vel.configure(from_=0.0, to=1.2)
+			self.sliceAxis2vel.configure(from_=0.0, to=1.2)
 		elif (self.boxe_prise_2.get() == 'y'):
 			self.sliceAxis1.configure(from_=0.0, to=0.05)
 			self.sliceAxis2.configure(from_=0.0, to=0.05)
+			self.sliceAxis1vel.configure(from_=0.0, to=0.05)
+			self.sliceAxis2vel.configure(from_=0.0, to=0.05)
 		elif (self.boxe_prise_2.get() == 'z'):
 			self.sliceAxis1.configure(from_=0.0, to=0.05)
 			self.sliceAxis2.configure(from_=0.0, to=0.05)
+			self.sliceAxis1vel.configure(from_=0.0, to=0.05)
+			self.sliceAxis2vel.configure(from_=0.0, to=0.05)
 
 
 	def createPlot(self):
@@ -550,27 +705,27 @@ class InterfaceGraphe():
 		if (self.boxe_prise_2.get() == 'x'):
 			a = 1
 			o = 2
-			r=0
-			plt.title('Plasma electron energy (J) Y and Z')
+			r = 0
+			plt.title('Plasma particules energy (J) Y and Z')
 			plt.xlabel('Y (cm)')
 			plt.ylabel('Z (cm)')
 
 		elif (self.boxe_prise_2.get() == 'y'):
 			a = 0
 			o = 2
-			r=1
-			plt.title('Plasma electron energy (J) X and Z')
+			r = 1
+			plt.title('Plasma particules energy (J) X and Z')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Z (cm)')
 		elif (self.boxe_prise_2.get() == 'z'):
 			a = 0
 			o = 1
-			r=2
-			plt.title('Plasma electron energy (J) X and Y')
+			r = 2
+			plt.title('Plasma particules energy (J) X and Y')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Y (cm)')
 		else:
-			plt.title('Plasma electron energy')
+			plt.title('Plasma particules energy')
 
 		if (self.boxe_prise_2.get() != ""):
 			xmin = self.tabPart[a][0]
@@ -604,77 +759,6 @@ class InterfaceGraphe():
 		self.nb_label['text'] = self.language[21] + str(self.nb)
 		self.graph.draw()
 		self.loading2['text'] = ""
-
-
-
-	def loadtemplate(self):
-		filename = askopenfilename(filetypes = (("NetCDF files", "*.nc"),("Data files", "*.dat"),("All files", "*.*")))
-		if filename:
-			try:
-				self.entName['text'] = filename
-			except:
-				showerror("Open Source File", "Failed to read file \n'%s'"%filename)
-				return
-
-
-
-	def loadData(self):
-		if os.path.exists(self.fileName):
-			self.parttab, self.tabPart, self.energy = readFilePart(self.fileName, int(self.num))
-			self.slice = 0.0
-			self.Dslice = 0.0
-			self.actualSlice = ''
-			self.max = max(self.energy)
-			self.min = min(self.energy)
-
-
-
-	def changeDataFileButton(self,event):
-		self.loading1['text'] = "Loading..."
-		self.loading1.update()
-
-		verif1 = False
-		verif2 = False
-
-		if not (os.path.exists(self.entName['text'])):
-			self.errorName['text'] = self.language[30]
-			verif1 = False
-		else :
-			self.errorName['text'] = self.language[7]
-			verif2 = True
-
-		if self.boxe_prise.get() != '1' and self.boxe_prise.get() != '2' and self.boxe_prise.get() != '3' and self.boxe_prise.get() != '4':
-			self.errorNum['text'] = self.language[31]
-			verif2 = False
-		else :
-			self.errorNum['text'] = self.language[7]
-			verif1 = True
-
-
-		if verif1 and verif2 and (self.num != int(self.boxe_prise.get()) or self.fileName != self.entName['text']):
-
-			self.fileName = self.entName['text']
-			self.fileNameLabel['text'] = self.fileName
-			self.num = int(self.boxe_prise.get())
-			self.part['text'] = self.language[32] + str(self.num)
-
-			# Data
-
-			start = time.time()
-			self.loadData()
-
-			print()
-			print("Success")
-			print("Time : ",time.time()-start,"s\n")
-
-			self.nb_part_file = int(self.parttab)
-
-			self.labelNumber['text'] = self.language[8] + str(self.nb_part_file)
-			self.labelMin['text'] = self.language[9] + str(self.min) + self.language[33]
-			self.labelMax['text'] = self.language[10] + str(self.max) + self.language[33]
-			self.suiteCanvas()
-		self.loading1['text'] = ""
-			
 
 
 	def plotPartButton(self,event):
@@ -730,6 +814,214 @@ class InterfaceGraphe():
 			self.createPlot()
 
 
+
+	def loadtemplate(self):
+		filename = askopenfilename(filetypes = (("NetCDF files", "*.nc"),("Data files", "*.dat"),("All files", "*.*")))
+		if filename:
+			try:
+				self.entName['text'] = filename
+			except:
+				showerror("Open Source File", "Failed to read file \n'%s'"%filename)
+				return
+
+
+
+	def loadData(self):
+		if os.path.exists(self.fileName):
+			self.parttab, self.tabPart, self.energy , self.velocity = readFilePart(self.fileName, int(self.num))
+			self.slice = 0.0
+			self.Dslice = 0.0
+			self.actualSlice = ''
+			self.max = max(self.energy)
+			self.min = min(self.energy)
+			self.maxvel = max(self.velocity)
+			self.minvel = min(self.velocity)
+
+
+
+	def changeDataFileButton(self,event):
+		self.loading1['text'] = "Loading..."
+		self.loading1.update()
+
+		verif1 = False
+		verif2 = False
+
+		if not (os.path.exists(self.entName['text'])):
+			self.errorName['text'] = self.language[30]
+			verif1 = False
+		else :
+			self.errorName['text'] = self.language[7]
+			verif2 = True
+
+		if self.boxe_prise.get() != '1' and self.boxe_prise.get() != '2' and self.boxe_prise.get() != '3' and self.boxe_prise.get() != '4':
+			self.errorNum['text'] = self.language[31]
+			verif2 = False
+		else :
+			self.errorNum['text'] = self.language[7]
+			verif1 = True
+
+
+		if verif1 and verif2 and (self.num != int(self.boxe_prise.get()) or self.fileName != self.entName['text']):
+
+			self.fileName = self.entName['text']
+			self.fileNameLabel['text'] = self.fileName
+			self.num = int(self.boxe_prise.get())
+			self.part['text'] = self.language[32] + str(self.num)
+
+			# Data
+
+			start = time.time()
+			self.loadData()
+
+			print()
+			print("Success")
+			print("Time : ",time.time()-start,"s\n")
+
+			self.nb_part_file = int(self.parttab)
+
+			self.labelNumber['text'] = self.language[8] + str(self.nb_part_file)
+			self.labelMin['text'] = self.language[9] + str(self.min) + self.language[33]
+			self.labelMax['text'] = self.language[10] + str(self.max) + self.language[33]
+			self.labelMinvel['text'] = self.language[9] + str(self.minvel) + "cm/s"
+			self.labelMaxvel['text'] = self.language[10] + str(self.maxvel) + "cm/s"
+			self.suiteCanvas()
+		self.loading1['text'] = ""
+		self.loading1.update()
+
+
+
+	def createPlotVel(self):
+		self.loading2vel['text'] = " Loading..."
+		self.loading2vel.update()
+		try:
+			self.slicevel = float(self.sliceValuevel.get())
+			self.Dslicevel = float(self.deltaValuevel.get())
+			self.Axis1vel = float(self.sliceAxis1vel.get())
+			self.Axis2vel = float(self.sliceAxis2vel.get())
+
+		except:
+			pass
+		plt.figure(3)
+		plt.clf()
+
+		self.nbvel = 0
+		abss = []
+		ordn = []
+		color = []
+		if (self.boxe_prise_2.get() == 'x'):
+			a = 1
+			o = 2
+			r = 0
+			plt.title('Plasma particules energy (J) Y and Z')
+			plt.xlabel('Y (cm)')
+			plt.ylabel('Z (cm)')
+
+		elif (self.boxe_prise_2.get() == 'y'):
+			a = 0
+			o = 2
+			r = 1
+			plt.title('Plasma particules energy (J) X and Z')
+			plt.xlabel('X (cm)')
+			plt.ylabel('Z (cm)')
+		elif (self.boxe_prise_2.get() == 'z'):
+			a = 0
+			o = 1
+			r = 2
+			plt.title('Plasma particules energy (J) X and Y')
+			plt.xlabel('X (cm)')
+			plt.ylabel('Y (cm)')
+		else:
+			plt.title('Plasma particules energy')
+
+		if (self.boxe_prise_2.get() != ""):
+			xmin = self.tabPart[a][0]
+			xmax = self.tabPart[a][0]
+			ymin = self.tabPart[o][0]
+			ymax = self.tabPart[o][0]
+
+			for i in range(0,int(self.parttab)):
+
+				if xmin > self.tabPart[a][i]:
+					xmin = self.tabPart[a][i]
+				if xmax < self.tabPart[a][i]:
+					xmax = self.tabPart[a][i]
+				if ymin > self.tabPart[o][i]:
+					ymin = self.tabPart[o][i]
+				if ymax < self.tabPart[o][i]:
+					ymax = self.tabPart[o][i]
+
+				if ((self.velocity[i] >= self.slicevel) and (self.velocity[i] <= self.Dslicevel) and (self.tabPart[r][i]>=self.Axis1vel) and (self.tabPart[r][i]<=self.Axis2vel)):
+					abss.append(self.tabPart[a][i])
+					ordn.append(self.tabPart[o][i])
+					color.append(self.velocity[i])
+					self.nbvel += 1
+
+			plt.scatter(abss,ordn, c = color, s = 10, marker = 'o', cmap = 'jet',edgecolor = 'none')
+			plt.xlim(xmin,xmax)
+			plt.ylim(ymin,ymax)
+			plt.colorbar()
+
+
+		self.nb_labelvel['text'] = self.language[21] + str(self.nbvel)
+		self.graphvel.draw()
+		self.loading2vel['text'] = ""
+
+
+	def plotPartButtonVel(self,event):
+
+		verif1 = False
+		verif2 = False
+		verif3 = False
+		verif4 = False
+
+		if (float(self.sliceAxis1vel.get())>float(self.sliceAxis2vel.get())):
+			self.errorAxisvel['text'] = str(float(self.sliceAxis1vel.get())) + self.language[37]
+			verif4 = False
+		else:
+			self.errorAxisvel['text'] = self.language[7]
+			verif4 = True
+
+
+		if not isFloat(self.sliceValuevel.get()):
+			self.errorvelocity['text'] = self.language[34]
+			verif1 = False
+		elif  float(self.sliceValuevel.get()) < 0 :
+			self.errorvelocity['text'] = self.language[35]
+			verif1 = False
+		else:
+			verif1 = True
+			self.errorvelocity['text'] = self.language[7]
+
+
+		if not isFloat(self.deltaValuevel.get()):
+			self.errorDeltavel['text'] = self.language[34]
+			verif2 = False
+		elif float(self.deltaValuevel.get()) > 2:
+			self.errorDeltavel['text'] = self.language[36]
+			verif2 = False
+
+		elif  float(self.deltaValuevel.get()) <  float(self.sliceValuevel.get()):
+			self.errorDeltavel['text'] = str(self.sliceValuevel.get()) + self.language[37]
+			verif2 = False
+
+		else:
+			verif2 = True
+			self.errorDeltavel['text'] = self.language[7]
+
+		if self.boxe_prise_2.get() == "" :
+			self.errorRadiovel['text'] = self.language[38]
+			verif3 = False
+		else :
+			verif3 = True
+			self.errorRadiovel['text'] = self.language[7]
+
+		if verif2 and verif3 and verif1 and verif4 and (float(self.deltaValuevel.get()) != self.Dslicevel or float(self.sliceValuevel.get()) != self.slicevel or self.boxe_prise_2.get() != self.actualSlicevel or float(self.sliceAxis1vel.get()) != self.Axis1vel or float(self.sliceAxis2vel.get()) != self.Axis2vel):
+			self.actualSlicevel = self.boxe_prise_2.get()
+			self.createPlotVel()	
+
+
+
+
 	def savePlt(self):
 		plt.figure(1)
 		plt.savefig(self.saveName1.get())
@@ -765,6 +1057,7 @@ class InterfaceGraphe():
 		self.can_home.grid_remove()
 		self.can_plot.grid_remove()
 		self.can_histo.grid_remove()
+		self.can_plotvel.grid_remove()
 
 		
 		self.can_data.grid(row=3,column=1,padx=1, pady=1,sticky=W)
@@ -780,7 +1073,7 @@ class InterfaceGraphe():
 			self.can_home.grid_remove()
 			self.can_histo.grid_remove()
 			self.can_data.grid_remove()
-
+			self.can_plotvel.grid_remove()
 			
 
 
@@ -793,6 +1086,18 @@ class InterfaceGraphe():
 
 			self.can_home.grid_remove()
 			self.can_plot.grid_remove()
+			self.can_data.grid_remove()
+			self.can_plotvel.grid_remove()
+
+	def plotPartVel(self, event):
+		if os.path.exists(self.fileName):
+			self.root.unbind('<Return>')
+			self.menu['width'] = 1500
+			self.can_plotvel.grid(row=3,column=1,padx=1, pady=1)
+
+			self.can_plot.grid_remove()
+			self.can_home.grid_remove()
+			self.can_histo.grid_remove()
 			self.can_data.grid_remove()
 
 
@@ -807,6 +1112,7 @@ class InterfaceGraphe():
 		self.can_plot.grid_remove()
 		self.can_histo.grid_remove()
 		self.can_data.grid_remove()
+		self.can_plotvel.grid_remove()
 
 
 
