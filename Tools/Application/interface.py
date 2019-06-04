@@ -118,6 +118,7 @@ class InterfaceGraphe():
 		self.Axis2vel=1.0
 
 		self.scalevalue = 10
+		self.scalevaluevel = 10
 
 
 		self.boxe_prise = StringVar()
@@ -136,7 +137,7 @@ class InterfaceGraphe():
 		fig = plt.figure(figsize=(12, 7), dpi=96)
 		fig2 = plt.figure(figsize=(12, 6), dpi=96)
 		fig3 = plt.figure(figsize=(12, 7), dpi=96)
-
+		fig4 = plt.figure(figsize=(12, 6), dpi=96)
 
 
 		self.creationCanvas()
@@ -166,23 +167,23 @@ class InterfaceGraphe():
 
 		# Creation des canevas
 
-		self.menu = Canvas(self.root,width =800, height=30, bg = '#AAAAAA', highlightthickness=0)
+		self.menu = Canvas(self.root,width =1000, height=30, bg = '#AAAAAA', highlightthickness=0)
 		self.menu.grid(row=0, column=1, padx=1, pady=1)
 		self.menu.grid_propagate(0)
 
-		self.title = Canvas(self.root,width =800, height =50, highlightthickness=0)
+		self.title = Canvas(self.root,width =1000, height =50, highlightthickness=0)
 		self.title.grid(row=1,column=1,padx=1, pady=1,sticky=W)
 		self.title.grid_propagate(0)
 
-		self.file = Canvas(self.root,width =800, height =100, highlightthickness=0)
+		self.file = Canvas(self.root,width =1000, height =100, highlightthickness=0)
 		self.file.grid(row=2,column=1,padx=1, pady=1,sticky=W)
 		self.file.grid_propagate(0)
 
-		self.can_home = Canvas(self.root,width =800, height =400, highlightthickness=0)
+		self.can_home = Canvas(self.root,width =1000, height =400, highlightthickness=0)
 		self.can_home.grid(row=3,column=1,padx=1, pady=1)
 		self.can_home.grid_propagate(0)
 
-		self.can_data = Canvas(self.root,width =800, height =400, highlightthickness=0)
+		self.can_data = Canvas(self.root,width =1000, height =400, highlightthickness=0)
 		self.can_data.grid_propagate(0)
 
 		self.can_plot = Canvas(self.root, highlightthickness=0)
@@ -190,6 +191,8 @@ class InterfaceGraphe():
 		self.can_histo = Canvas(self.root, highlightthickness=0)
 
 		self.can_plotvel = Canvas(self.root, highlightthickness=0)
+
+		self.can_histovel = Canvas(self.root, highlightthickness=0)
 
 		self.can_help = Canvas(self.root, highlightthickness=0)
 
@@ -212,6 +215,8 @@ class InterfaceGraphe():
 		tmp += 1
 
 		self.entete_plotvel = Label(self.title,text = "Plot Velocity", font=(None, 15))
+
+		self.entete_histovel = Label(self.title,text = "Histogram Velocity", font=(None, 15))
 
 		self.entete_help = Label(self.title,text = self.language[tmp], font=(None, 15))
 		tmp += 1
@@ -280,9 +285,12 @@ class InterfaceGraphe():
 		bou5.bind("<Button-1>", self.plotPartVel)
 		bou5.grid(row=1, column=6,padx=2, pady=2,sticky=W)
 
-		bou6 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
-		tmp += 1
+		bou6 = ttk.Button(self.menu, text="Histogram Velocity", width = 15, command = self.histovel)
 		bou6.grid(row=1, column=7,padx=2, pady=2,sticky=W)
+
+		bou7 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
+		tmp += 1
+		bou7.grid(row=1, column=8,padx=2, pady=2,sticky=W)
 
 
 		# Canvas de Home
@@ -586,16 +594,54 @@ class InterfaceGraphe():
 		#tmp += 1
 		label.grid(row = 0, column = 1,pady=1,sticky=W)
 
-		self.saveName1Vel = Entry(saveCanvas)
-		self.saveName1Vel.grid(row = 1, column = 1,pady=1,sticky=W)
+		self.saveName3 = Entry(saveCanvas)
+		self.saveName3.grid(row = 1, column = 1,pady=1,sticky=W)
 
-		saveBut = ttk.Button(saveCanvas, text="Save", width = 15, command = self.savePlt)
+		saveBut = ttk.Button(saveCanvas, text="Save", width = 15, command = self.savePlt3)
 		#tmp += 1
 		saveBut.grid(row = 2, column =1,pady=1,sticky=W)
 
 		saveCanvas.grid(row = 19, column = 1,padx = 10,pady=50,sticky=W)
 
 		self.createPlotVel()
+
+
+		# Canvas de l'histogramme velocity
+
+		fig4 = plt.figure(4)
+		self.canvasvel = FigureCanvasTkAgg(fig4, master = self.can_histovel)
+		self.canvasvel.get_tk_widget().pack(side='left', fill='both', expand=1)
+
+		self.menuFig_4 = Canvas(self.can_histovel)
+
+		saveCanvas = Canvas(self.menuFig_2, highlightthickness=0)
+
+		label = Label(saveCanvas, text = self.language[tmp_save])
+		label.grid(row = 0, column = 1,pady=1,sticky=W)
+
+		self.saveName4 = Entry(saveCanvas)
+		self.saveName4.grid(row = 1, column = 1,pady=1,sticky=W)
+
+		saveBut = ttk.Button(saveCanvas, text=self.language[tmp_save+1], width = 15, command = self.savePlt4)
+		saveBut.grid(row = 2, column =1,pady=1,sticky=W)
+
+		saveCanvas.grid(row = 0, column = 0,padx = 10,pady=50,sticky=W)
+
+		slide = Canvas(self.menuFig_2, highlightthickness=0)
+
+		scale = Scale(slide, orient='vertical', sliderlength = 30, tickinterval = 49, length=600, from_=1, to=300, command = self.slideValueVel)
+		scale.set(self.scalevaluevel)
+		scale.grid(row = 1, column = 0,padx = 50)
+
+		self.showNumberself = Label(slide,text = "" )
+		self.showNumberself.grid(row = 2, column = 0)
+		self.showvelocity = Label(slide,text = "" )
+		self.showvelocity.grid(row = 3, column = 0)
+
+		slide.grid(row = 1, column = 0)
+
+		self.menuFig_4.pack(side = "right")
+
 		
 
 	def suiteCanvas(self):
@@ -665,6 +711,24 @@ class InterfaceGraphe():
 		self.loading2vel.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
 
 		self.createPlotVel()
+
+		# Canvas de l'histogramme
+
+
+		slide = Canvas(self.menuFig_4, highlightthickness=0)
+
+		scale = Scale(slide, orient='vertical', sliderlength = 30, tickinterval = 49, length=600, from_=1, to=300, command = self.slideValueVel)
+		scale.set(self.scalevaluevel)
+		scale.grid(row = 1, column = 0,padx = 50)
+
+		self.showNumbervel = Label(slide,text = "" )
+		self.showNumbervel.grid(row = 2, column = 0)
+		self.showvelocity = Label(slide,text = "" )
+		self.showvelocity.grid(row = 3, column = 0)
+
+		slide.grid(row = 1, column = 0)
+
+		self.menuFig_4.pack(side = "right")
 
 	def SliceFace(self):
 		if (self.boxe_prise_2.get() == 'x'):
@@ -1032,6 +1096,16 @@ class InterfaceGraphe():
 		plt.savefig(self.saveName2.get())
 
 
+	def savePlt3(self):
+		plt.figure(3)
+		plt.savefig(self.saveName3.get())
+
+
+	def savePlt4(self):
+		plt.figure(4)
+		plt.savefig(self.saveName4.get())
+
+
 	def slideValue(self, val):
 		plt.figure(2)
 		plt.clf()
@@ -1050,13 +1124,33 @@ class InterfaceGraphe():
 		self.scalevalue = val
 
 
+	def slideValueVel(self, val):
+		plt.figure(4)
+		plt.clf()
+		cm = plt.cm.get_cmap('jet')
+		self.nvel, self.binsvel, patches = plt.hist(self.velocity, int(val))
+		bin_centers = 0.5 * (self.binsvel[:-1] + self.binsvel[1:])
+		col = bin_centers - min(bin_centers)
+		if max(col) != 0:
+			col /= max(col)
+		for c, p in zip(col, patches):
+		    plt.setp(p, 'facecolor', cm(c))
+		plt.title('Plasma electron energy')
+		plt.xlabel('energy (J)')
+		plt.ylabel('Number of particules')
+		self.canvasvel.draw()
+		self.scalevaluevel = val
+
+
+
 	def changeDataFile(self):
 		self.root.unbind('<Return>')
-		self.menu['width'] = 800
+		self.menu['width'] = 1000
 
 		self.can_home.grid_remove()
 		self.can_plot.grid_remove()
 		self.can_histo.grid_remove()
+		self.can_histovel.grid_remove()
 		self.can_plotvel.grid_remove()
 
 		
@@ -1072,6 +1166,7 @@ class InterfaceGraphe():
 
 			self.can_home.grid_remove()
 			self.can_histo.grid_remove()
+			self.can_histovel.grid_remove()
 			self.can_data.grid_remove()
 			self.can_plotvel.grid_remove()
 			
@@ -1084,6 +1179,7 @@ class InterfaceGraphe():
 
 			self.can_histo.grid(row=3,column=1,padx=1, pady=1)
 
+			self.can_histovel.grid_remove()
 			self.can_home.grid_remove()
 			self.can_plot.grid_remove()
 			self.can_data.grid_remove()
@@ -1098,19 +1194,34 @@ class InterfaceGraphe():
 			self.can_plot.grid_remove()
 			self.can_home.grid_remove()
 			self.can_histo.grid_remove()
+			self.can_histovel.grid_remove()
 			self.can_data.grid_remove()
+
+	def histovel(self):
+		if os.path.exists(self.fileName):
+			self.root.unbind('<Return>')
+			self.menu['width'] = 1500
+
+			self.can_histovel.grid(row=3,column=1,padx=1, pady=1)
+
+			self.can_histo.grid_remove()
+			self.can_home.grid_remove()
+			self.can_plot.grid_remove()
+			self.can_data.grid_remove()
+			self.can_plotvel.grid_remove()
 
 
 
 	def returnHome(self):
 		self.root.unbind('<Return>')
-		self.menu['width'] = 800
+		self.menu['width'] = 1000
 
 		self.can_home.grid(row=3,column=1,padx=1, pady=1)
 		self.can_home.grid_propagate(0)
 
 		self.can_plot.grid_remove()
 		self.can_histo.grid_remove()
+		self.can_histovel.grid_remove()
 		self.can_data.grid_remove()
 		self.can_plotvel.grid_remove()
 
