@@ -10,6 +10,7 @@ import numpy as np
 import time
 import math
 import os.path
+from sklearn.cluster import KMeans
 
 from readFile import readFilePart
 from changeLang import changeLang
@@ -138,6 +139,11 @@ class InterfaceGraphe():
 		fig2 = plt.figure(figsize=(12, 6), dpi=96)
 		fig3 = plt.figure(figsize=(12, 7), dpi=96)
 		fig4 = plt.figure(figsize=(12, 6), dpi=96)
+
+		
+		#Clusters
+
+		self.clusters=[]
 
 
 		self.creationCanvas()
@@ -766,6 +772,7 @@ class InterfaceGraphe():
 		abss = []
 		ordn = []
 		color = []
+		self.clusters=[]
 		if (self.boxe_prise_2.get() == 'x'):
 			a = 1
 			o = 2
@@ -812,12 +819,15 @@ class InterfaceGraphe():
 					abss.append(self.tabPart[a][i])
 					ordn.append(self.tabPart[o][i])
 					color.append(self.energy[i])
+					#self.clusters+=[(self.tabPart[a][i],self.tabPart[o][i])]
 					self.nb += 1
 
 			plt.scatter(abss,ordn, c = color, s = 10, marker = 'o', cmap = 'jet',edgecolor = 'none')
 			plt.xlim(xmin,xmax)
 			plt.ylim(ymin,ymax)
 			plt.colorbar()
+			#kmeans=KMeans(n_clusters=10, n_init=10, tol=1e-4).fit(self.clusters)
+			#print(kmeans.cluster_centers_)
 
 
 		self.nb_label['text'] = self.language[21] + str(self.nb)
@@ -896,6 +906,9 @@ class InterfaceGraphe():
 			self.slice = 0.0
 			self.Dslice = 0.0
 			self.actualSlice = ''
+			self.slicevel = 0.0
+			self.Dslicevel = 0.0
+			self.actualSlicevel = ''
 			self.max = max(self.energy)
 			self.min = min(self.energy)
 			self.maxvel = max(self.velocity)
@@ -976,7 +989,7 @@ class InterfaceGraphe():
 			a = 1
 			o = 2
 			r = 0
-			plt.title('Plasma particules energy (J) Y and Z')
+			plt.title('Plasma particules velocity (cm/s) Y and Z')
 			plt.xlabel('Y (cm)')
 			plt.ylabel('Z (cm)')
 
@@ -984,18 +997,18 @@ class InterfaceGraphe():
 			a = 0
 			o = 2
 			r = 1
-			plt.title('Plasma particules energy (J) X and Z')
+			plt.title('Plasma particules velocity (cm/s) X and Z')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Z (cm)')
 		elif (self.boxe_prise_2.get() == 'z'):
 			a = 0
 			o = 1
 			r = 2
-			plt.title('Plasma particules energy (J) X and Y')
+			plt.title('Plasma particules velocity (cm/s) X and Y')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Y (cm)')
 		else:
-			plt.title('Plasma particules energy')
+			plt.title('Plasma particules velocity')
 
 		if (self.boxe_prise_2.get() != ""):
 			xmin = self.tabPart[a][0]
@@ -1135,8 +1148,8 @@ class InterfaceGraphe():
 			col /= max(col)
 		for c, p in zip(col, patches):
 		    plt.setp(p, 'facecolor', cm(c))
-		plt.title('Plasma electron energy')
-		plt.xlabel('energy (J)')
+		plt.title('Plasma electron velocity')
+		plt.xlabel('velocity (cm/s)')
 		plt.ylabel('Number of particules')
 		self.canvasvel.draw()
 		self.scalevaluevel = val

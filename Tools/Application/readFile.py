@@ -84,7 +84,7 @@ def readFilePartNC(nameFile, n):
 			Imp_y1=abs(ma.getdata(mumu.variables["Impulses_y0"][:]))
 			Imp_z1=abs(ma.getdata(mumu.variables["Impulses_z0"][:]))
 			for i in range(0,part1):
-				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				p = Imp_x1[i]**2+Imp_y1[i]**2+Imp_z1[i]**2
 				energy1[i] += p
 				velocity1[i] = math.sqrt((p)/(p+1))
 			part2 = mumu.variables["Coordinates_x1"].size
@@ -98,7 +98,7 @@ def readFilePartNC(nameFile, n):
 			Imp_y2=abs(ma.getdata(mumu.variables["Impulses_y1"][:]))
 			Imp_z2=abs(ma.getdata(mumu.variables["Impulses_z1"][:]))
 			for i in range(0,part2):
-				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				p = Imp_x2[i]**2+Imp_y2[i]**2+Imp_z2[i]**2
 				energy2[i] += p
 				velocity2[i] = math.sqrt((p)/(p+1))
 			part3 = mumu.variables["Coordinates_x2"].size
@@ -112,7 +112,7 @@ def readFilePartNC(nameFile, n):
 			Imp_y3=abs(ma.getdata(mumu.variables["Impulses_y2"][:]))
 			Imp_z3=abs(ma.getdata(mumu.variables["Impulses_z2"][:]))
 			for i in range(0,part3):
-				p = Imp_x[i]**2+Imp_y[i]**2+Imp_z[i]**2
+				p = Imp_x3[i]**2+Imp_y3[i]**2+Imp_z3[i]**2
 				energy3[i] += p
 				velocity3[i] = math.sqrt((p)/(p+1))
 			part=part1+part2+part3
@@ -170,6 +170,7 @@ def readFilePartDat(nameFile, n):
 
 			tabPart1 = np.zeros((3,size1),dtype = 'd')
 			energy1 = np.ones(size1,dtype = 'd')
+			velocity1 = np.zeros(size1,dtype = 'd')
 	
 			for x in range(0,6):
 				r = f.read(size1*8+8)
@@ -182,10 +183,13 @@ def readFilePartDat(nameFile, n):
 				elif x == 3 or x == 4:
 					for i in range(0,size1):
 						energy1[i]+=struct1[tmp]**2
+						velocity1[i] += struct1[tmp]**2
 						tmp+=1
 				else:
 					for i in range(0,size1):
 						energy1[i]+=struct1[tmp]**2
+						p = velocity1[i] + struct1[tmp]**2
+						velocity1[i] = math.sqrt((p)/(p+1))
 						tmp+=1
 
 
@@ -196,6 +200,7 @@ def readFilePartDat(nameFile, n):
 	
 			tabPart2 = np.zeros((3,size2),dtype = 'd')
 			energy2 = np.ones(size2,dtype = 'd')
+			velocity2 = np.ones(size2,dtype = 'd')
 	
 			for x in range(0,6):
 				r = f.read(size2*8+8)
@@ -208,10 +213,13 @@ def readFilePartDat(nameFile, n):
 				elif x == 3 or x == 4:
 					for i in range(0,size2):
 						energy2[i]+=struct2[tmp]**2
+						velocity2[i] += struct2[tmp]**2
 						tmp+=1
 				else:
 					for i in range(0,size2):
 						energy2[i]+=struct2[tmp]**2
+						p = velocity2[i] + struct2[tmp]**2
+						velocity2[i] = math.sqrt((p)/(p+1))
 						tmp+=1
 
 			r = f.read(32)
@@ -221,6 +229,7 @@ def readFilePartDat(nameFile, n):
 	
 			tabPart3 = np.zeros((3,size3),dtype = 'd')
 			energy3 = np.ones(size3,dtype = 'd')
+			velocity3 = np.ones(size3,dtype = 'd')
 	
 			for x in range(0,6):
 				r = f.read(size3*8+8)
@@ -233,16 +242,20 @@ def readFilePartDat(nameFile, n):
 				elif x == 3 or x == 4:
 					for i in range(0,size3):
 						energy3[i]+=struct3[tmp]**2
+						velocity3[i] += struct3[tmp]**2
 						tmp+=1
 				else:
 					for i in range(0,size3):
 						energy3[i]+=struct3[tmp]**2
+						p = velocity3[i] + struct3[tmp]**2
+						velocity3[i] = math.sqrt((p)/(p+1))
 						tmp+=1
 
 			size = size1+size2+size3
 			print("Size : ",size)
 			tabPart = np.concatenate((np.concatenate((tabPart1,tabPart2),axis=1),tabPart3),axis=1)
 			energy = np.concatenate((np.concatenate((energy1,energy2),axis=0),energy3),axis=0)
+			velocity = np.concatenate((np.concatenate((velocity1,velocity2),axis=0),velocity3),axis=0)
 			
 		else :
 			f = open(nameFile, "rb")
