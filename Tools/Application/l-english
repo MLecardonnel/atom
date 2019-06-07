@@ -1,7 +1,7 @@
 HOME
 DATA
-PLOT 2D
-HISTOGRAM
+PLOT ENERGY
+HISTOGRAM ENERGY
 HELP
 File :
 None
@@ -11,8 +11,8 @@ Min is :
 Max is : 
 Home
 Data
-Plot 2D
-Histogram
+Plot Energy
+Histogram Energy
 Help
 Welcome
 Choose File :
