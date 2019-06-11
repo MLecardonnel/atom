@@ -11,6 +11,7 @@ import time
 import math
 import os.path
 from sklearn.cluster import KMeans
+from sklearn.cluster import MeanShift
 
 from readFile import readFilePart
 from changeLang import changeLang
@@ -675,12 +676,11 @@ class InterfaceGraphe():
 		self.loading2 = Label(self.menuFig)
 		self.loading2.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
 
-		self.createPlot()
 
 
-		self.nbr_centers = Entry(self.menuFig)
-		self.nbr_centers.insert(END,str(self.nbr))
-		self.nbr_centers.grid(row = 19,column = 1,padx=10, pady=1,sticky=W)
+		#self.nbr_centers = Entry(self.menuFig)
+		#self.nbr_centers.insert(END,str(self.nbr))
+		#self.nbr_centers.grid(row = 19,column = 1,padx=10, pady=1,sticky=W)
 		clustering = ttk.Button(self.menuFig, text="Clusters", width = 15, command = self.Kmeans)
 		clustering.grid(row = 20, column =1,padx=10,pady=1,sticky=W)
 
@@ -747,8 +747,9 @@ class InterfaceGraphe():
 
 
 	def Kmeans(self):
-		self.nbr = int(self.nbr_centers.get())
-		kmeans=KMeans(n_clusters=self.nbr, n_init=100, tol=1e-4).fit(self.clusters)
+		#self.nbr = int(self.nbr_centers.get())
+		#kmeans=KMeans(n_clusters=self.nbr, n_init=100, tol=1e-4).fit(self.clusters)
+		kmeans=MeanShift(bandwidth = 0.01).fit(self.clusters)
 		centers=kmeans.cluster_centers_
 		print(centers)
 		for i in range(len(centers)):
@@ -839,15 +840,13 @@ class InterfaceGraphe():
 					abss.append(self.tabPart[a][i])
 					ordn.append(self.tabPart[o][i])
 					color.append(self.energy[i])
-					self.clusters+=[(self.tabPart[a][i],self.tabPart[o][i])]
+					self.clusters+=[[self.tabPart[a][i],self.tabPart[o][i],self.tabPart[r][i]]]
 					self.nb += 1
 
 			plt.scatter(abss,ordn, c = color, s = 10, marker = 'o', cmap = 'jet',edgecolor = 'none')
 			plt.xlim(xmin,xmax)
 			plt.ylim(ymin,ymax)
 			plt.colorbar()
-			#kmeans=KMeans(n_clusters=10, n_init=100, tol=1e-4).fit(self.clusters)
-			#print(kmeans.cluster_centers_)
 
 
 		self.nb_label['text'] = self.language[21] + str(self.nb)
