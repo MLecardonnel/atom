@@ -1,7 +1,9 @@
 ACCUEIL
 DONNEE
-PLOT 2D
-HISTOGRAMME
+PLOT ENERGIE
+HISTOGRAMME ENERGIE
+PLOT VELOCITE
+HISTOGRAMME VELOCITE
 AIDE
 Fichier :
 Aucun
@@ -11,8 +13,10 @@ Min est :
 Max est : 
 Accueil
 Donnée
-Plot 2D
-Histogramme
+Plot Energie
+Histogramme Energie
+Plot Vélocité
+Histogramme Vélocité
 Aide
 Bienvenue
 Choisir un fichier :

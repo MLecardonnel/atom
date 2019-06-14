@@ -96,7 +96,7 @@ class InterfaceGraphe():
 
 		# Argument function
 
-		self.fileName = self.language[6]
+		self.fileName = self.language[8]
 		self.num = 1
 		self.nb_part_file = 0
 		self.max = 0
@@ -158,7 +158,7 @@ class InterfaceGraphe():
 
 		try:
 			self.language = changeLang(self.listBox.curselection()[0])
-			self.fileName = self.language[6]
+			self.fileName = self.language[8]
 		except:
 			pass
 
@@ -166,10 +166,10 @@ class InterfaceGraphe():
 
 
 		tmp = 0
-		tmp_vide = 7
-		tmp_unit = 33
-		tmp_save = 28
-		tmp_lang = 39
+		tmp_vide = 9
+		tmp_unit = 37
+		tmp_save = 32
+		tmp_lang = 43
 
 
 
@@ -222,9 +222,11 @@ class InterfaceGraphe():
 		self.entete_histo = Label(self.title,text = self.language[tmp], font=(None, 15))
 		tmp += 1
 
-		self.entete_plotvel = Label(self.title,text = "Plot Velocity", font=(None, 15))
+		self.entete_plotvel = Label(self.title,text = self.language[tmp], font=(None, 15))
+		tmp += 1
 
-		self.entete_histovel = Label(self.title,text = "Histogram Velocity", font=(None, 15))
+		self.entete_histovel = Label(self.title,text = self.language[tmp], font=(None, 15))
+		tmp += 1
 
 		self.entete_help = Label(self.title,text = self.language[tmp], font=(None, 15))
 		tmp += 1
@@ -258,13 +260,13 @@ class InterfaceGraphe():
 		self.labelvelocity.grid(row = 2, column = 2,padx=10, pady=1,sticky=W)
 
 		self.labelMin = Label(self.file, text = self.language[tmp] + str(self.min) + self.language[tmp_unit])
-		self.labelMinvel = Label(self.file, text = self.language[tmp] + str(self.minvel) + "cm/s")
+		self.labelMinvel = Label(self.file, text = self.language[tmp] + str(self.minvel) + " cm/s")
 		tmp += 1
 		self.labelMin.grid(row = 3, column = 1,padx=10, pady=1,sticky=W)
 		self.labelMinvel.grid(row = 3, column = 2,padx=10, pady=1,sticky=W)
 
 		self.labelMax = Label(self.file, text = self.language[tmp] + str(self.max) + self.language[tmp_unit])
-		self.labelMaxvel = Label(self.file, text = self.language[tmp] + str(self.maxvel) + "cm/s")
+		self.labelMaxvel = Label(self.file, text = self.language[tmp] + str(self.maxvel) + " cm/s")
 		tmp += 1
 		self.labelMax.grid(row = 4, column = 1,padx=10, pady=1,sticky=W)
 		self.labelMaxvel.grid(row = 4, column = 2,padx=10, pady=1,sticky=W)
@@ -289,11 +291,13 @@ class InterfaceGraphe():
 		tmp += 1
 		bou4.grid(row=1, column=5,padx=2, pady=2,sticky=W)
 
-		bou5 = ttk.Button(self.menu, text="Plot Velocity", width = 15)
+		bou5 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
+		tmp += 1
 		bou5.bind("<Button-1>", self.plotPartVel)
 		bou5.grid(row=1, column=6,padx=2, pady=2,sticky=W)
 
-		bou6 = ttk.Button(self.menu, text="Histogram Velocity", width = 15, command = self.histovel)
+		bou6 = ttk.Button(self.menu, text=self.language[tmp], width = 15, command = self.histovel)
+		tmp += 1
 		bou6.grid(row=1, column=7,padx=2, pady=2,sticky=W)
 
 		bou7 = ttk.Button(self.menu, text=self.language[tmp], width = 15)
@@ -476,7 +480,7 @@ class InterfaceGraphe():
 		tmp += 1
 		saveBut.grid(row = 2, column =1,pady=1,sticky=W)
 
-		saveCanvas.grid(row = 21, column = 1,padx = 10,pady=50,sticky=W)
+		saveCanvas.grid(row = 22, column = 1,padx = 10,pady=50,sticky=W)
 
 		self.createPlot()
 
@@ -684,6 +688,9 @@ class InterfaceGraphe():
 		clustering = ttk.Button(self.menuFig, text="Clusters", width = 15, command = self.Kmeans)
 		clustering.grid(row = 20, column =1,padx=10,pady=1,sticky=W)
 
+		self.nbrclusters = Label(self.menuFig)
+		self.nbrclusters.grid(row = 21, column = 1,padx=10, pady=1,sticky=W)
+
 
 		# Canvas de l'histogramme
 
@@ -755,6 +762,7 @@ class InterfaceGraphe():
 		for i in range(len(centers)):
 			plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia")
 		self.graph.draw()
+		self.nbrclusters['text'] = str(len(centers)) + " clusters"
 
 
 	def SliceFace(self):
@@ -849,7 +857,7 @@ class InterfaceGraphe():
 			plt.colorbar()
 
 
-		self.nb_label['text'] = self.language[21] + str(self.nb)
+		self.nb_label['text'] = self.language[25] + str(self.nb)
 		self.graph.draw()
 		self.loading2['text'] = ""
 
@@ -865,42 +873,42 @@ class InterfaceGraphe():
 			self.errorAxis['text'] = str(float(self.sliceAxis1.get())) + self.language[37]
 			verif4 = False
 		else:
-			self.errorAxis['text'] = self.language[7]
+			self.errorAxis['text'] = self.language[9]
 			verif4 = True
 
 
 		if not isFloat(self.sliceValue.get()):
-			self.errorenergy['text'] = self.language[34]
+			self.errorenergy['text'] = self.language[38]
 			verif1 = False
 		elif  float(self.sliceValue.get()) < 0 :
-			self.errorenergy['text'] = self.language[35]
+			self.errorenergy['text'] = self.language[39]
 			verif1 = False
 		else:
 			verif1 = True
-			self.errorenergy['text'] = self.language[7]
+			self.errorenergy['text'] = self.language[9]
 
 
 		if not isFloat(self.deltaValue.get()):
-			self.errorDelta['text'] = self.language[34]
+			self.errorDelta['text'] = self.language[38]
 			verif2 = False
 		elif float(self.deltaValue.get()) > 2:
-			self.errorDelta['text'] = self.language[36]
+			self.errorDelta['text'] = self.language[40]
 			verif2 = False
 
 		elif  float(self.deltaValue.get()) <  float(self.sliceValue.get()):
-			self.errorDelta['text'] = str(self.sliceValue.get()) + self.language[37]
+			self.errorDelta['text'] = str(self.sliceValue.get()) + self.language[41]
 			verif2 = False
 
 		else:
 			verif2 = True
-			self.errorDelta['text'] = self.language[7]
+			self.errorDelta['text'] = self.language[9]
 
 		if self.boxe_prise_2.get() == "" :
-			self.errorRadio['text'] = self.language[38]
+			self.errorRadio['text'] = self.language[42]
 			verif3 = False
 		else :
 			verif3 = True
-			self.errorRadio['text'] = self.language[7]
+			self.errorRadio['text'] = self.language[9]
 
 		if verif2 and verif3 and verif1 and verif4 and (float(self.deltaValue.get()) != self.Dslice or float(self.sliceValue.get()) != self.slice or self.boxe_prise_2.get() != self.actualSlice or float(self.sliceAxis1.get()) != self.Axis1 or float(self.sliceAxis2.get()) != self.Axis2):
 			self.actualSlice = self.boxe_prise_2.get()
@@ -943,17 +951,17 @@ class InterfaceGraphe():
 		verif2 = False
 
 		if not (os.path.exists(self.entName['text'])):
-			self.errorName['text'] = self.language[30]
+			self.errorName['text'] = self.language[34]
 			verif1 = False
 		else :
-			self.errorName['text'] = self.language[7]
+			self.errorName['text'] = self.language[9]
 			verif2 = True
 
 		if self.boxe_prise.get() != '1' and self.boxe_prise.get() != '2' and self.boxe_prise.get() != '3' and self.boxe_prise.get() != '4':
-			self.errorNum['text'] = self.language[31]
+			self.errorNum['text'] = self.language[35]
 			verif2 = False
 		else :
-			self.errorNum['text'] = self.language[7]
+			self.errorNum['text'] = self.language[9]
 			verif1 = True
 
 
@@ -962,7 +970,7 @@ class InterfaceGraphe():
 			self.fileName = self.entName['text']
 			self.fileNameLabel['text'] = self.fileName
 			self.num = int(self.boxe_prise.get())
-			self.part['text'] = self.language[32] + str(self.num)
+			self.part['text'] = self.language[36] + str(self.num)
 
 			# Data
 
@@ -975,11 +983,11 @@ class InterfaceGraphe():
 
 			self.nb_part_file = int(self.parttab)
 
-			self.labelNumber['text'] = self.language[8] + str(self.nb_part_file)
-			self.labelMin['text'] = self.language[9] + str(self.min) + self.language[33]
-			self.labelMax['text'] = self.language[10] + str(self.max) + self.language[33]
-			self.labelMinvel['text'] = self.language[9] + str(self.minvel) + "cm/s"
-			self.labelMaxvel['text'] = self.language[10] + str(self.maxvel) + "cm/s"
+			self.labelNumber['text'] = self.language[10] + str(self.nb_part_file)
+			self.labelMin['text'] = self.language[11] + str(self.min) + self.language[37]
+			self.labelMax['text'] = self.language[12] + str(self.max) + self.language[37]
+			self.labelMinvel['text'] = self.language[11] + str(self.minvel) + " cm/s"
+			self.labelMaxvel['text'] = self.language[12] + str(self.maxvel) + " cm/s"
 			self.suiteCanvas()
 		self.loading1['text'] = ""
 		self.loading1.update()
@@ -1058,7 +1066,7 @@ class InterfaceGraphe():
 			plt.colorbar()
 
 
-		self.nb_labelvel['text'] = self.language[21] + str(self.nbvel)
+		self.nb_labelvel['text'] = self.language[25] + str(self.nbvel)
 		self.graphvel.draw()
 		self.loading2vel['text'] = ""
 
@@ -1071,29 +1079,29 @@ class InterfaceGraphe():
 		verif4 = False
 
 		if (float(self.sliceAxis1vel.get())>float(self.sliceAxis2vel.get())):
-			self.errorAxisvel['text'] = str(float(self.sliceAxis1vel.get())) + self.language[37]
+			self.errorAxisvel['text'] = str(float(self.sliceAxis1vel.get())) + self.language[41]
 			verif4 = False
 		else:
-			self.errorAxisvel['text'] = self.language[7]
+			self.errorAxisvel['text'] = self.language[9]
 			verif4 = True
 
 
 		if not isFloat(self.sliceValuevel.get()):
-			self.errorvelocity['text'] = self.language[34]
+			self.errorvelocity['text'] = self.language[38]
 			verif1 = False
 		elif  float(self.sliceValuevel.get()) < 0 :
-			self.errorvelocity['text'] = self.language[35]
+			self.errorvelocity['text'] = self.language[39]
 			verif1 = False
 		else:
 			verif1 = True
-			self.errorvelocity['text'] = self.language[7]
+			self.errorvelocity['text'] = self.language[9]
 
 
 		if not isFloat(self.deltaValuevel.get()):
-			self.errorDeltavel['text'] = self.language[34]
+			self.errorDeltavel['text'] = self.language[38]
 			verif2 = False
 		elif float(self.deltaValuevel.get()) > 2:
-			self.errorDeltavel['text'] = self.language[36]
+			self.errorDeltavel['text'] = self.language[40]
 			verif2 = False
 
 		elif  float(self.deltaValuevel.get()) <  float(self.sliceValuevel.get()):
@@ -1102,14 +1110,14 @@ class InterfaceGraphe():
 
 		else:
 			verif2 = True
-			self.errorDeltavel['text'] = self.language[7]
+			self.errorDeltavel['text'] = self.language[9]
 
 		if self.boxe_prise_2.get() == "" :
-			self.errorRadiovel['text'] = self.language[38]
+			self.errorRadiovel['text'] = self.language[42]
 			verif3 = False
 		else :
 			verif3 = True
-			self.errorRadiovel['text'] = self.language[7]
+			self.errorRadiovel['text'] = self.language[9]
 
 		if verif2 and verif3 and verif1 and verif4 and (float(self.deltaValuevel.get()) != self.Dslicevel or float(self.sliceValuevel.get()) != self.slicevel or self.boxe_prise_2.get() != self.actualSlicevel or float(self.sliceAxis1vel.get()) != self.Axis1vel or float(self.sliceAxis2vel.get()) != self.Axis2vel):
 			self.actualSlicevel = self.boxe_prise_2.get()

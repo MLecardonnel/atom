@@ -2,6 +2,8 @@ HOME
 DATA
 PLOT ENERGY
 HISTOGRAM ENERGY
+PLOT VELOCITY
+HISTOGRAM VELOCITY
 HELP
 File :
 None
@@ -13,6 +15,8 @@ Home
 Data
 Plot Energy
 Histogram Energy
+Plot Velocity
+Histogram Velocity
 Help
 Welcome
 Choose File :
