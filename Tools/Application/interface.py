@@ -467,6 +467,12 @@ class InterfaceGraphe():
 		self.loading2 = Label(self.menuFig)
 		self.loading2.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
 
+		clustering = ttk.Button(self.menuFig, text="Clusters", width = 15, command = self.Kmeans)
+		clustering.grid(row = 20, column =1,padx=10,pady=1,sticky=W)
+
+		self.nbrclusters = Label(self.menuFig)
+		self.nbrclusters.grid(row = 21, column = 1,padx=10, pady=1,sticky=W)
+
 		saveCanvas = Canvas(self.menuFig, highlightthickness=0)
 
 		label = Label(saveCanvas, text = self.language[tmp])
@@ -756,9 +762,13 @@ class InterfaceGraphe():
 	def Kmeans(self):
 		#self.nbr = int(self.nbr_centers.get())
 		#kmeans=KMeans(n_clusters=self.nbr, n_init=100, tol=1e-4).fit(self.clusters)
+		plt.clf()
 		kmeans=MeanShift(bandwidth = 0.01).fit(self.clusters)
 		centers=kmeans.cluster_centers_
+		labels=kmeans.labels_
+		labels_unique=np.unique(labels)
 		print(centers)
+		plt.scatter(self.abss,self.ordn, c = labels, s = 10, marker = 'o', cmap = 'gist_ncar',edgecolor = 'none')
 		for i in range(len(centers)):
 			plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia")
 		self.graph.draw()
@@ -798,8 +808,8 @@ class InterfaceGraphe():
 		plt.clf()
 
 		self.nb = 0
-		abss = []
-		ordn = []
+		self.abss = []
+		self.ordn = []
 		color = []
 		self.clusters=[]
 		if (self.boxe_prise_2.get() == 'x'):
@@ -845,13 +855,13 @@ class InterfaceGraphe():
 					ymax = self.tabPart[o][i]
 
 				if ((self.energy[i] >= self.slice) and (self.energy[i] <= self.Dslice) and (self.tabPart[r][i]>=self.Axis1) and (self.tabPart[r][i]<=self.Axis2)):
-					abss.append(self.tabPart[a][i])
-					ordn.append(self.tabPart[o][i])
+					self.abss.append(self.tabPart[a][i])
+					self.ordn.append(self.tabPart[o][i])
 					color.append(self.energy[i])
 					self.clusters+=[[self.tabPart[a][i],self.tabPart[o][i],self.tabPart[r][i]]]
 					self.nb += 1
 
-			plt.scatter(abss,ordn, c = color, s = 10, marker = 'o', cmap = 'jet',edgecolor = 'none')
+			plt.scatter(self.abss,self.ordn, c = color, s = 10, marker = 'o', cmap = 'jet',edgecolor = 'none')
 			plt.xlim(xmin,xmax)
 			plt.ylim(ymin,ymax)
 			plt.colorbar()
@@ -859,6 +869,7 @@ class InterfaceGraphe():
 
 		self.nb_label['text'] = self.language[25] + str(self.nb)
 		self.graph.draw()
+		self.nbrclusters['text'] = ""
 		self.loading2['text'] = ""
 
 
