@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse
 from mpl_toolkits import mplot3d
 # plt.rcParams.update({'figure.max_open_warning': 0})
 
@@ -769,8 +770,21 @@ class InterfaceGraphe():
 		labels_unique=np.unique(labels)
 		print(centers)
 		plt.scatter(self.abss,self.ordn, c = labels, s = 10, marker = 'o', cmap = 'gist_ncar',edgecolor = 'none')
+		ax = plt.gca()
 		for i in range(len(centers)):
+			l=0.0
+			h=0.0
+			for j in range(len(labels)):
+				if i==labels[j]:
+					l_tmp=abs(self.abss[j]-centers[i][0])
+					h_tmp=abs(self.ordn[j]-centers[i][1])
+					if l_tmp>l:
+						l=l_tmp
+					if h_tmp>h:
+						h=h_tmp
 			plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia")
+			ellipse=Ellipse((centers[i][0],centers[i][1]),width=2*l,height=2*h,color="fuchsia",fill=False,linewidth=0.5)
+			ax.add_artist(ellipse)
 		self.graph.draw()
 		self.nbrclusters['text'] = str(len(centers)) + " clusters"
 
