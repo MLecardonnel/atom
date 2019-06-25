@@ -16,6 +16,10 @@ def readFilePartNC(nameFile, n):
 
 	try:
 		mumu=Dataset(nameFile,"r",format="NETCDF4")
+		elec = np.zeros((3,102,6,6),dtype='d')
+		elec[0] = ma.getdata(mumu.variables["Ex(x, y, z)"][:])
+		elec[1] = ma.getdata(mumu.variables["Ey(x, y, z)"][:])
+		elec[2] = ma.getdata(mumu.variables["Ez(x, y, z)"][:])
 		if (n == 1) :
 			print("First Sort of Particules")
 			part = mumu.variables["Coordinates_x0"].size
@@ -130,7 +134,7 @@ def readFilePartNC(nameFile, n):
 		mumu.close()
 		print("OK")
 	
-		return (part,tabPart,energy,velocity)
+		return (part,tabPart,energy,velocity,elec)
 
 def createFormatInt8(size):
 	form = "<l"
@@ -162,6 +166,7 @@ def readFilePartDat(nameFile, n):
 						for k in range(0,6):
 							tab[x][i][j][k] = v[tmp]
 							tmp+=1
+			elec = tab[0:2]
 
 			r = f.read(32)
 			part1 = struct.unpack("<ldddl",r)
@@ -271,6 +276,8 @@ def readFilePartDat(nameFile, n):
 						for k in range(0,6):
 							tab[x][i][j][k] = v[tmp]
 							tmp+=1
+			elec = tab[0:2]
+
 			if (n > 1):
 				r = f.read(32)
 				part1 = struct.unpack("<ldddl",r)
@@ -337,13 +344,13 @@ def readFilePartDat(nameFile, n):
 		f.close()
 		print("OK")
 	
-		return (size,tabPart,energy,velocity)
+		return (size,tabPart,energy,velocity,elec)
 
 def readFilePart(nameFile, n):
 	if (nameFile.split(".")[1]=="nc"):
-		[part,tabPart,energy,velocity]=readFilePartNC(nameFile, n)
+		[part,tabPart,energy,velocity,elec]=readFilePartNC(nameFile, n)
 	elif (nameFile.split(".")[1]=="dat"):
-		[part,tabPart,energy,velocity]=readFilePartDat(nameFile, n)
-	return (part,tabPart,energy,velocity)
+		[part,tabPart,energy,velocity,elec]=readFilePartDat(nameFile, n)
+	return (part,tabPart,energy,velocity,elec)
 
 

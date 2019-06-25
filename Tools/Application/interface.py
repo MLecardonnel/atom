@@ -141,6 +141,7 @@ class InterfaceGraphe():
 		fig2 = plt.figure(figsize=(12, 6), dpi=96)
 		fig3 = plt.figure(figsize=(12, 7), dpi=96)
 		fig4 = plt.figure(figsize=(12, 6), dpi=96)
+		fig5 = plt.figure(figsize=(12, 7), dpi=96)
 
 		
 		#Clusters
@@ -759,16 +760,24 @@ class InterfaceGraphe():
 
 		self.menuFig_4.pack(side = "right")
 
+	def onpick1(self,event):
+		thisline = event.artist
+		xdata = thisline.get_xdata()
+		ydata = thisline.get_ydata()
+		ind = event.ind
+		print('X='+str(np.take(xdata, ind)[0]))
+		print('Y='+str(np.take(ydata, ind)[0]))
+
 
 	def Kmeans(self):
 		#self.nbr = int(self.nbr_centers.get())
 		#kmeans=KMeans(n_clusters=self.nbr, n_init=100, tol=1e-4).fit(self.clusters)
+		fig = plt.figure(1)
 		plt.clf()
 		kmeans=MeanShift(bandwidth = 0.01).fit(self.clusters)
 		centers=kmeans.cluster_centers_
 		labels=kmeans.labels_
 		labels_unique=np.unique(labels)
-		print(centers)
 		plt.scatter(self.abss,self.ordn, c = labels, s = 10, marker = 'o', cmap = 'gist_ncar',edgecolor = 'none')
 		ax = plt.gca()
 		for i in range(len(centers)):
@@ -782,9 +791,10 @@ class InterfaceGraphe():
 						l=l_tmp
 					if h_tmp>h:
 						h=h_tmp
-			plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia")
+			plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia",picker="True")
 			ellipse=Ellipse((centers[i][0],centers[i][1]),width=2*l,height=2*h,color="fuchsia",fill=False,linewidth=0.5)
 			ax.add_artist(ellipse)
+		fig.canvas.mpl_connect('pick_event', self.onpick1)
 		self.graph.draw()
 		self.nbrclusters['text'] = str(len(centers)) + " clusters"
 
@@ -954,7 +964,7 @@ class InterfaceGraphe():
 
 	def loadData(self):
 		if os.path.exists(self.fileName):
-			self.parttab, self.tabPart, self.energy , self.velocity = readFilePart(self.fileName, int(self.num))
+			self.parttab, self.tabPart, self.energy , self.velocity , self.elec = readFilePart(self.fileName, int(self.num))
 			self.slice = 0.0
 			self.Dslice = 0.0
 			self.actualSlice = ''
@@ -1094,6 +1104,42 @@ class InterfaceGraphe():
 		self.nb_labelvel['text'] = self.language[25] + str(self.nbvel)
 		self.graphvel.draw()
 		self.loading2vel['text'] = ""
+
+
+	def plotElec(self):
+		fig5 = plt.figure(5)
+		self.graphElec = FigureCanvasTkAgg(fig5, master = self.can_plot)
+		self.graphElec.get_tk_widget().pack(side='left', fill='both', expand=1, pady = 10)
+		
+		if (self.boxe_prise_2.get() == 'x'):
+			a = 1
+			o = 2
+			r = 0
+			plt.title('Electric Field')
+			plt.xlabel('Position')
+			plt.ylabel('Electric Field X')
+
+		elif (self.boxe_prise_2.get() == 'y'):
+			a = 0
+			o = 2
+			r = 1
+			plt.title('Electric Field')
+			plt.xlabel('Position')
+			plt.ylabel('Electric Field Y')
+		elif (self.boxe_prise_2.get() == 'z'):
+			a = 0
+			o = 1
+			r = 2
+			plt.title('Electric Field')
+			plt.xlabel('Position')
+			plt.ylabel('Electric Field Z')
+		else:
+			plt.title('Electric Field')
+		field=self.elec[r]
+		abscissa = np.arange(0, len(field), 1)
+		axis = [] + [field[i][y][z] for i in range(len(field))]
+		plt.plot(abscissa, axis, markersize=0.2, color='red')
+		self.graphElec.draw()
 
 
 	def plotPartButtonVel(self,event):
