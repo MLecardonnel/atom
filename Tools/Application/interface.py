@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import Toplevel
 from tkinter.filedialog import askopenfilename
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
@@ -11,7 +12,6 @@ import numpy as np
 import time
 import math
 import os.path
-from sklearn.cluster import KMeans
 from sklearn.cluster import MeanShift
 
 from readFile import readFilePart
@@ -30,7 +30,7 @@ class InterfaceGraphe():
 	def __init__(self):
 
 		self.root = Tk()
-		self.root.title('Particules Application')
+		self.root.title('Particles Application')
 		self.root.protocol('WM_DELETE_WINDOW', self.root.quit)
 		self.root.resizable(width=False, height=False)
 
@@ -39,57 +39,65 @@ class InterfaceGraphe():
 		# self.language = [
 		# 'HOME',
 		# 'DATA',
-		# 'PLOT 2D',
-		# 'HISTOGRAM',
+		# 'PLOT ENERGY',
+		# 'HISTOGRAM ENERGY',
+		# 'PLOT VELOCITY',
+		# 'HISTOGRAM VELOCITY',
+		# 'HELP',
 
-		# # 4
+		# # 7
 		# 'File :',
 		# 'None',
 		# '',
-		# 'Number of particules : ',
+		# 'Number of particles : ',
 		# 'Min is : ',
 		# 'Max is : ',
 
-		# # 10
+		# # 13
 		# 'Home',
 		# 'Data',
-		# 'Plot 2D',
-		# 'Histogram',
+		# 'Plot Energy',
+		# 'Histogram Energy',
+		# 'Plot Velocity',
+		# 'Histogram Velocity',
+		# 'Help',
 
-		# # 14
+		# # 20
 		# 'Welcome',
 
-		# # 15
+		# # 21
 		# 'Choose File :',
 		# 'Browse',
-		# 'Select number of sort of particules :',
+		# 'Select number of sort of particles :',
 		# 'OK',
 
-		# # 19
-		# 'Particule find : ',
-		# 'Slice of :',
-		# 'energy From :',
-		# 'energy To :',
+		# # 25
+		# 'Particle find : ',
+		# 'Face',
+		# 'Energy From :',
+		# 'To :',
 		# 'OK',
 		# 'Save as :',
 		# 'Save',
 
-		# #26
+		# # 32
 		# 'Save as :',
 		# 'Save',
 
-		# # 28
+		# # 34
 		# 'No file selected !',
 		# 'Select a number !',
 		# 'Part : ',
-		# ' cm/s',
+		# ' J',
 
-		# # 32
+		# # 38
 		# 'It\'s not a float !',
 		# 'Enter a positif number !',
 		# '1 is the maximum !',
 		# ' is the minimum !',
-		# 'Select a slice !'
+		# 'Select a slice !',
+		# 'Choose language :',
+		# 'OK'
 		# ]
 
 		self.language = changeLang(0)
@@ -147,7 +155,6 @@ class InterfaceGraphe():
 		#Clusters
 
 		self.clusters=[]
-		self.nbr=8
 
 
 		self.creationCanvas()
@@ -538,7 +545,7 @@ class InterfaceGraphe():
 		self.menuFigVel = Canvas(self.can_plotvel, width = 300, highlightthickness=0)
 		self.menuFigVel.pack(side='right', fill='both', expand=1)
 
-		self.nb_labelvel = Label(self.menuFigVel, text = "Particules find" + str(self.nb))
+		self.nb_labelvel = Label(self.menuFigVel, text = "Particles find" + str(self.nb))
 		#tmp += 1
 		self.nb_labelvel.grid(row=0,column=1, padx=10, pady=10,sticky=W)
 
@@ -664,41 +671,18 @@ class InterfaceGraphe():
 
 		
 
-	def suiteCanvas(self):
+	def updateCanvas(self):
 
 		# Canvas de Plot 2D
 
-		self.errorAxis = Label(self.menuFig,fg='red')
-		self.errorAxis.grid(row = 8, column = 1,padx=10, pady=1,sticky=W)
 
 		self.sliceValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.000000000000001, length=250, from_=self.min, to=self.max)
 		self.sliceValue.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
 
-		self.errorenergy = Label(self.menuFig,fg='red')
-		self.errorenergy.grid(row = 12, column = 1,padx=10, pady=1,sticky=W)
-
-
 		self.deltaValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.000000000000001, length=250, from_=self.min, to=self.max)
 		self.deltaValue.grid(row = 15,column = 1,padx=10, pady=1,sticky=W)
 
-
-		self.errorDelta = Label(self.menuFig,fg='red')
-		self.errorDelta.grid(row = 16, column = 1,padx=10, pady=1,sticky=W)
-
-		self.loading2 = Label(self.menuFig)
-		self.loading2.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
-
-
-
-		#self.nbr_centers = Entry(self.menuFig)
-		#self.nbr_centers.insert(END,str(self.nbr))
-		#self.nbr_centers.grid(row = 19,column = 1,padx=10, pady=1,sticky=W)
-		clustering = ttk.Button(self.menuFig, text="Clusters", width = 15, command = self.Kmeans)
-		clustering.grid(row = 20, column =1,padx=10,pady=1,sticky=W)
-
-		self.nbrclusters = Label(self.menuFig)
-		self.nbrclusters.grid(row = 21, column = 1,padx=10, pady=1,sticky=W)
-
+		self.createPlot()
 
 		# Canvas de l'histogramme
 
@@ -720,25 +704,12 @@ class InterfaceGraphe():
 
 		# Canvas de Plot Velocity
 
-		self.errorAxisvel = Label(self.menuFigVel,fg='red')
-		self.errorAxisvel.grid(row = 8, column = 1,padx=10, pady=1,sticky=W)
 
 		self.sliceValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.000000000001, length=250, from_=self.minvel, to=self.maxvel)
 		self.sliceValuevel.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
 
-		self.errorvelocity = Label(self.menuFigVel,fg='red')
-		self.errorvelocity.grid(row = 12, column = 1,padx=10, pady=1,sticky=W)
-
-
 		self.deltaValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.000000000001, length=250, from_=self.minvel, to=self.maxvel)
 		self.deltaValuevel.grid(row = 15,column = 1,padx=10, pady=1,sticky=W)
-
-
-		self.errorDeltavel = Label(self.menuFigVel,fg='red')
-		self.errorDeltavel.grid(row = 16, column = 1,padx=10, pady=1,sticky=W)
-
-		self.loading2vel = Label(self.menuFigVel)
-		self.loading2vel.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
 
 		self.createPlotVel()
 
@@ -760,43 +731,61 @@ class InterfaceGraphe():
 
 		self.menuFig_4.pack(side = "right")
 
+
 	def onpick1(self,event):
 		thisline = event.artist
-		xdata = thisline.get_xdata()
-		ydata = thisline.get_ydata()
 		ind = event.ind
-		print('X='+str(np.take(xdata, ind)[0]))
-		print('Y='+str(np.take(ydata, ind)[0]))
+		
+		if (self.boxe_prise_2.get() == 'x'):
+			self.y=self.centers[ind[0]][0]
+			self.z=self.centers[ind[0]][1]
+		elif (self.boxe_prise_2.get() == 'y'):
+			self.y=self.centers[ind[0]][2]
+			self.z=self.centers[ind[0]][1]
+		elif (self.boxe_prise_2.get() == 'z'):
+			self.y=self.centers[ind[0]][1]
+			self.z=self.centers[ind[0]][2]
+		
+		#self.y=self.centers[ind[0]][0]
+		#self.z=self.centers[ind[0]][1]
+		#xdata = thisline.get_xdata()
+		#ydata = thisline.get_ydata()
+		#print('A='+str(np.take(xdata, ind)[0]))
+		#print('O='+str(np.take(ydata, ind)[0]))
+		self.plotElec()
 
 
 	def Kmeans(self):
-		#self.nbr = int(self.nbr_centers.get())
-		#kmeans=KMeans(n_clusters=self.nbr, n_init=100, tol=1e-4).fit(self.clusters)
 		fig = plt.figure(1)
 		plt.clf()
 		kmeans=MeanShift(bandwidth = 0.01).fit(self.clusters)
-		centers=kmeans.cluster_centers_
+		self.centers=kmeans.cluster_centers_
 		labels=kmeans.labels_
 		labels_unique=np.unique(labels)
 		plt.scatter(self.abss,self.ordn, c = labels, s = 10, marker = 'o', cmap = 'gist_ncar',edgecolor = 'none')
 		ax = plt.gca()
-		for i in range(len(centers)):
+		abscenter=[]
+		ordcenter=[]
+		for i in range(len(self.centers)):
 			l=0.0
 			h=0.0
 			for j in range(len(labels)):
 				if i==labels[j]:
-					l_tmp=abs(self.abss[j]-centers[i][0])
-					h_tmp=abs(self.ordn[j]-centers[i][1])
+					l_tmp=abs(self.abss[j]-self.centers[i][0])
+					h_tmp=abs(self.ordn[j]-self.centers[i][1])
 					if l_tmp>l:
 						l=l_tmp
 					if h_tmp>h:
 						h=h_tmp
-			plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia",picker="True")
-			ellipse=Ellipse((centers[i][0],centers[i][1]),width=2*l,height=2*h,color="fuchsia",fill=False,linewidth=0.5)
+			#plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia",picker="True")
+			abscenter+=[self.centers[i][0]]
+			ordcenter+=[self.centers[i][1]]
+			ellipse=Ellipse((self.centers[i][0],self.centers[i][1]),width=2*l,height=2*h,color="fuchsia",fill=False,linewidth=0.5)
 			ax.add_artist(ellipse)
+		plt.plot(abscenter,ordcenter,"ro",color="fuchsia",picker="True")
 		fig.canvas.mpl_connect('pick_event', self.onpick1)
 		self.graph.draw()
-		self.nbrclusters['text'] = str(len(centers)) + " clusters"
+		self.nbrclusters['text'] = str(len(self.centers)) + " clusters"
 
 
 	def SliceFace(self):
@@ -840,7 +829,7 @@ class InterfaceGraphe():
 			a = 1
 			o = 2
 			r = 0
-			plt.title('Plasma particules energy (J) Y and Z')
+			plt.title('Plasma particles energy (J) Y and Z')
 			plt.xlabel('Y (cm)')
 			plt.ylabel('Z (cm)')
 
@@ -848,18 +837,18 @@ class InterfaceGraphe():
 			a = 0
 			o = 2
 			r = 1
-			plt.title('Plasma particules energy (J) X and Z')
+			plt.title('Plasma particles energy (J) X and Z')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Z (cm)')
 		elif (self.boxe_prise_2.get() == 'z'):
 			a = 0
 			o = 1
 			r = 2
-			plt.title('Plasma particules energy (J) X and Y')
+			plt.title('Plasma particles energy (J) X and Y')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Y (cm)')
 		else:
-			plt.title('Plasma particules energy')
+			plt.title('Plasma particles energy')
 
 		if (self.boxe_prise_2.get() != ""):
 			xmin = self.tabPart[a][0]
@@ -1023,7 +1012,7 @@ class InterfaceGraphe():
 			self.labelMax['text'] = self.language[12] + str(self.max) + self.language[37]
 			self.labelMinvel['text'] = self.language[11] + str(self.minvel) + " cm/s"
 			self.labelMaxvel['text'] = self.language[12] + str(self.maxvel) + " cm/s"
-			self.suiteCanvas()
+			self.updateCanvas()
 		self.loading1['text'] = ""
 		self.loading1.update()
 
@@ -1051,7 +1040,7 @@ class InterfaceGraphe():
 			a = 1
 			o = 2
 			r = 0
-			plt.title('Plasma particules velocity (cm/s) Y and Z')
+			plt.title('Plasma particles velocity (cm/s) Y and Z')
 			plt.xlabel('Y (cm)')
 			plt.ylabel('Z (cm)')
 
@@ -1059,18 +1048,18 @@ class InterfaceGraphe():
 			a = 0
 			o = 2
 			r = 1
-			plt.title('Plasma particules velocity (cm/s) X and Z')
+			plt.title('Plasma particles velocity (cm/s) X and Z')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Z (cm)')
 		elif (self.boxe_prise_2.get() == 'z'):
 			a = 0
 			o = 1
 			r = 2
-			plt.title('Plasma particules velocity (cm/s) X and Y')
+			plt.title('Plasma particles velocity (cm/s) X and Y')
 			plt.xlabel('X (cm)')
 			plt.ylabel('Y (cm)')
 		else:
-			plt.title('Plasma particules velocity')
+			plt.title('Plasma particles velocity')
 
 		if (self.boxe_prise_2.get() != ""):
 			xmin = self.tabPart[a][0]
@@ -1107,37 +1096,30 @@ class InterfaceGraphe():
 
 
 	def plotElec(self):
+		Elecwindow=Toplevel(self.can_plot)
+		Elecwindow.title('Electric Field')
 		fig5 = plt.figure(5)
-		self.graphElec = FigureCanvasTkAgg(fig5, master = self.can_plot)
-		self.graphElec.get_tk_widget().pack(side='left', fill='both', expand=1, pady = 10)
-		
-		if (self.boxe_prise_2.get() == 'x'):
-			a = 1
-			o = 2
-			r = 0
-			plt.title('Electric Field')
-			plt.xlabel('Position')
-			plt.ylabel('Electric Field X')
+		self.graphElec = FigureCanvasTkAgg(fig5, master = Elecwindow)
+		self.graphElec.get_tk_widget().pack(side='left', expand=1, pady = 10)
 
+		plt.clf()
+		plt.title('Electric Field')
+		plt.xlabel('Position')
+		plt.ylabel('Electric Field X')
+		field=self.elec[0]
+		"""
+		if (self.boxe_prise_2.get() == 'x'):
+			abscissa = np.arange(0, len(field), 1)
+			axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in range(len(field))]
 		elif (self.boxe_prise_2.get() == 'y'):
-			a = 0
-			o = 2
-			r = 1
-			plt.title('Electric Field')
-			plt.xlabel('Position')
-			plt.ylabel('Electric Field Y')
+			abscissa = np.arange(0, len(field[1]), 1)
+			axis = [] + [field[int(100*self.y/1.255)][i][int(100*self.z)] for i in range(len(field[1]))]
 		elif (self.boxe_prise_2.get() == 'z'):
-			a = 0
-			o = 1
-			r = 2
-			plt.title('Electric Field')
-			plt.xlabel('Position')
-			plt.ylabel('Electric Field Z')
-		else:
-			plt.title('Electric Field')
-		field=self.elec[r]
+			abscissa = np.arange(0, len(field[2]), 1)
+			axis = [] + [field[int(100*self.y/1.255)][int(100*self.z)][i] for i in range(len(field[2]))]
+		"""
 		abscissa = np.arange(0, len(field), 1)
-		axis = [] + [field[i][y][z] for i in range(len(field))]
+		axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in range(len(field))]
 		plt.plot(abscissa, axis, markersize=0.2, color='red')
 		self.graphElec.draw()
 
@@ -1230,7 +1212,7 @@ class InterfaceGraphe():
 		    plt.setp(p, 'facecolor', cm(c))
 		plt.title('Plasma electron energy')
 		plt.xlabel('energy (J)')
-		plt.ylabel('Number of particules')
+		plt.ylabel('Number of particles')
 		self.canvas.draw()
 		self.scalevalue = val
 
@@ -1248,7 +1230,7 @@ class InterfaceGraphe():
 		    plt.setp(p, 'facecolor', cm(c))
 		plt.title('Plasma electron velocity')
 		plt.xlabel('velocity (cm/s)')
-		plt.ylabel('Number of particules')
+		plt.ylabel('Number of particles')
 		self.canvasvel.draw()
 		self.scalevaluevel = val
 

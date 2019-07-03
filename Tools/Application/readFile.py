@@ -17,9 +17,9 @@ def readFilePartNC(nameFile, n):
 	try:
 		mumu=Dataset(nameFile,"r",format="NETCDF4")
 		elec = np.zeros((3,102,6,6),dtype='d')
-		elec[0] = ma.getdata(mumu.variables["Ex(x, y, z)"][:])
-		elec[1] = ma.getdata(mumu.variables["Ey(x, y, z)"][:])
-		elec[2] = ma.getdata(mumu.variables["Ez(x, y, z)"][:])
+		elec[0] = ma.getdata(mumu.variables["Ex"][:])
+		elec[1] = ma.getdata(mumu.variables["Ey"][:])
+		elec[2] = ma.getdata(mumu.variables["Ez"][:])
 		if (n == 1) :
 			print("First Sort of Particules")
 			part = mumu.variables["Coordinates_x0"].size
