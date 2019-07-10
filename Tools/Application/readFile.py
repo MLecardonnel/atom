@@ -1,6 +1,5 @@
 import struct
 import numpy as np
-import matplotlib.pyplot as plt
 import time
 import math
 from netCDF4 import Dataset

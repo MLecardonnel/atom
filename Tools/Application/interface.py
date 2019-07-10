@@ -739,13 +739,15 @@ class InterfaceGraphe():
 		if (self.boxe_prise_2.get() == 'x'):
 			self.y=self.centers[ind[0]][0]
 			self.z=self.centers[ind[0]][1]
+			self.x=self.centers[ind[0]][2]
 		elif (self.boxe_prise_2.get() == 'y'):
 			self.y=self.centers[ind[0]][2]
 			self.z=self.centers[ind[0]][1]
+			self.x=self.centers[ind[0]][0]
 		elif (self.boxe_prise_2.get() == 'z'):
 			self.y=self.centers[ind[0]][1]
 			self.z=self.centers[ind[0]][2]
-		
+			self.x=self.centers[ind[0]][0]
 		#self.y=self.centers[ind[0]][0]
 		#self.z=self.centers[ind[0]][1]
 		#xdata = thisline.get_xdata()
@@ -1104,8 +1106,8 @@ class InterfaceGraphe():
 
 		plt.clf()
 		plt.title('Electric Field')
-		plt.xlabel('Position')
-		plt.ylabel('Electric Field X')
+		plt.xlabel('Position X')
+		plt.ylabel('Electric Field Ex')
 		field=self.elec[0]
 		"""
 		if (self.boxe_prise_2.get() == 'x'):
@@ -1118,8 +1120,8 @@ class InterfaceGraphe():
 			abscissa = np.arange(0, len(field[2]), 1)
 			axis = [] + [field[int(100*self.y/1.255)][int(100*self.z)][i] for i in range(len(field[2]))]
 		"""
-		abscissa = np.arange(0, len(field), 1)
-		axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in range(len(field))]
+		abscissa = np.arange(int(100*self.x/1.255)-1, int(100*self.x/1.255)+2, 1)
+		axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in abscissa]
 		plt.plot(abscissa, axis, markersize=0.2, color='red')
 		self.graphElec.draw()
 
