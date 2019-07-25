@@ -748,18 +748,24 @@ class InterfaceGraphe():
 			self.y=self.centers[ind[0]][1]
 			self.z=self.centers[ind[0]][2]
 			self.x=self.centers[ind[0]][0]
-		#self.y=self.centers[ind[0]][0]
-		#self.z=self.centers[ind[0]][1]
-		#xdata = thisline.get_xdata()
-		#ydata = thisline.get_ydata()
-		#print('A='+str(np.take(xdata, ind)[0]))
-		#print('O='+str(np.take(ydata, ind)[0]))
 		self.plotElec()
 
 
 	def Kmeans(self):
 		fig = plt.figure(1)
 		plt.clf()
+		if (self.boxe_prise_2.get() == 'x'):
+			plt.title('Plasma particles energy (J) Y and Z')
+			plt.xlabel('Y (cm)')
+			plt.ylabel('Z (cm)')
+		elif (self.boxe_prise_2.get() == 'y'):
+			plt.title('Plasma particles energy (J) X and Z')
+			plt.xlabel('X (cm)')
+			plt.ylabel('Z (cm)')
+		elif (self.boxe_prise_2.get() == 'z'):
+			plt.title('Plasma particles energy (J) X and Y')
+			plt.xlabel('X (cm)')
+			plt.ylabel('Y (cm)')
 		kmeans=MeanShift(bandwidth = 0.01).fit(self.clusters)
 		self.centers=kmeans.cluster_centers_
 		labels=kmeans.labels_
@@ -779,7 +785,6 @@ class InterfaceGraphe():
 						l=l_tmp
 					if h_tmp>h:
 						h=h_tmp
-			#plt.plot(centers[i][0],centers[i][1],"ro",color="fuchsia",picker="True")
 			abscenter+=[self.centers[i][0]]
 			ordcenter+=[self.centers[i][1]]
 			ellipse=Ellipse((self.centers[i][0],self.centers[i][1]),width=2*l,height=2*h,color="fuchsia",fill=False,linewidth=0.5)
@@ -1109,17 +1114,6 @@ class InterfaceGraphe():
 		plt.xlabel('Position X')
 		plt.ylabel('Electric Field Ex')
 		field=self.elec[0]
-		"""
-		if (self.boxe_prise_2.get() == 'x'):
-			abscissa = np.arange(0, len(field), 1)
-			axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in range(len(field))]
-		elif (self.boxe_prise_2.get() == 'y'):
-			abscissa = np.arange(0, len(field[1]), 1)
-			axis = [] + [field[int(100*self.y/1.255)][i][int(100*self.z)] for i in range(len(field[1]))]
-		elif (self.boxe_prise_2.get() == 'z'):
-			abscissa = np.arange(0, len(field[2]), 1)
-			axis = [] + [field[int(100*self.y/1.255)][int(100*self.z)][i] for i in range(len(field[2]))]
-		"""
 		abscissa = np.arange(int(100*self.x/1.255)-1, int(100*self.x/1.255)+2, 1)
 		axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in abscissa]
 		plt.plot(abscissa, axis, markersize=0.2, color='red')
