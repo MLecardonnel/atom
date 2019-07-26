@@ -8,6 +8,8 @@ Before executing the application, you need to install :
 - Tkinter
 - Matplotlib
 - Numpy
+- Sklearn
+- NetCDF4
 
 To execute the application you need 4 files :
 
@@ -25,7 +27,7 @@ To execute the application you need 4 files :
 
 To start the application :
 
-- open a terminal in "mumu"
+- open a terminal in "Application"
 - execute the command : python3 interface
 
 
@@ -33,18 +35,29 @@ To start the application :
 		How to use the application
 ---------------------------------------------
 
-At the top of the application, you have 4 buttons which open
-4 pages.
+At the top of the application, you have 6 buttons which open
+6 pages.
 
 The first one is the home page. You can choose the language
 between english, french and russian. By default, it's in english.
 
-The second page is for selecting the file. You can only
-select a .dat file and the file need to have a particular
+The second page is for selecting the file. You can
+select a .dat or .nc file and the file need to have a particular
 construction.
 
-The third and fourth pages are plots but you can't open them
-if you haven't chosen a file. In the first one, you
-plot particles with a specific velocity and show their positions.
-You can change the face and range of the values. The second one is
-a histogram. You can save those plots whenever you want.
+The next pages are plots but you can't open them
+if you haven't chosen a file.
+In the third page, you plot particles with a specific energy 
+and show their positions. You can change the face, the range of 
+the slice and the range of the energy values. Clicking on the
+Cluster button identifies the clusters and their center, and plot
+them. Then clicking on a cluster center plots the electric field
+in this center.
+In the fourth page, there is a histogram of the energy distribution 
+of the particles.
+In the fifth page, you plot particles with a specific velocity 
+and show their positions. You can change the face, the range of 
+the slice and the range of the velocity values. 
+In the sixth one, there is a histogram of the velocity distribution 
+of the particles.
+You can save those plots whenever you want.
