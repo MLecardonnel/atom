@@ -27,6 +27,8 @@ def isFloat(stringToTest):
 		
 
 class InterfaceGraphe():
+
+	# Initialization function
 	def __init__(self):
 
 		self.root = Tk()
@@ -161,7 +163,7 @@ class InterfaceGraphe():
 
 
 
-
+	# Creation canvas function
 	def creationCanvas(self):
 
 
@@ -176,72 +178,84 @@ class InterfaceGraphe():
 
 		tmp = 0
 		tmp_vide = 9
+		tmp_vel = 25
 		tmp_unit = 37
 		tmp_save = 32
 		tmp_lang = 43
 
 
 
-		# Creation des canevas
+		# Creation of the canvas
 
+		# Menu canvas for the buttons
 		self.menu = Canvas(self.root,width =1000, height=30, bg = '#AAAAAA', highlightthickness=0)
 		self.menu.grid(row=0, column=1, padx=1, pady=1)
 		self.menu.grid_propagate(0)
 
+		# Title canvas for the heading
 		self.title = Canvas(self.root,width =1000, height =50, highlightthickness=0)
 		self.title.grid(row=1,column=1,padx=1, pady=1,sticky=W)
 		self.title.grid_propagate(0)
 
+		# File canvas for the file information
 		self.file = Canvas(self.root,width =1000, height =100, highlightthickness=0)
 		self.file.grid(row=2,column=1,padx=1, pady=1,sticky=W)
 		self.file.grid_propagate(0)
 
+		# Home canvas
 		self.can_home = Canvas(self.root,width =1000, height =400, highlightthickness=0)
 		self.can_home.grid(row=3,column=1,padx=1, pady=1)
 		self.can_home.grid_propagate(0)
 
+		# Data selection canvas
 		self.can_data = Canvas(self.root,width =1000, height =400, highlightthickness=0)
 		self.can_data.grid_propagate(0)
 
+		# Particles energy plotting canvas
 		self.can_plot = Canvas(self.root, highlightthickness=0)
 
+		# Energy histogram canvas
 		self.can_histo = Canvas(self.root, highlightthickness=0)
 
+		# Particles velocity plotting canvas
 		self.can_plotvel = Canvas(self.root, highlightthickness=0)
 
+		# Velocity histogram canvas
 		self.can_histovel = Canvas(self.root, highlightthickness=0)
 
 		self.can_help = Canvas(self.root, highlightthickness=0)
 
 
 
-		# L'entete
+		# Creation of the heading
 
-		self.entete_home = Label(self.title,text = self.language[tmp], font=(None, 15))
-		tmp += 1
-		self.entete_home.grid(row = 0, column = 0 ,padx=10)
+		self.entete = Label(self.title,text = self.language[tmp], font=(None, 15))
+		self.entete.grid(row = 0, column = 0 ,padx=10)
 
-
-		self.entete_data = Label(self.title,text = self.language[tmp], font=(None, 15))
+		self.entete_home = self.language[tmp]
 		tmp += 1
 
-		self.entete_plot = Label(self.title,text = self.language[tmp], font=(None, 15))
+		self.entete_data = self.language[tmp]
+		tmp += 1
+
+		self.entete_plot = self.language[tmp]
 		tmp += 1
 		
-		self.entete_histo = Label(self.title,text = self.language[tmp], font=(None, 15))
+		self.entete_histo = self.language[tmp]
 		tmp += 1
 
-		self.entete_plotvel = Label(self.title,text = self.language[tmp], font=(None, 15))
+		self.entete_plotvel = self.language[tmp]
 		tmp += 1
 
-		self.entete_histovel = Label(self.title,text = self.language[tmp], font=(None, 15))
+		self.entete_histovel = self.language[tmp]
 		tmp += 1
 
-		self.entete_help = Label(self.title,text = self.language[tmp], font=(None, 15))
+		self.entete_help = self.language[tmp]
 		tmp += 1
 
 
-		# File
+
+		# File information
 
 		fileNameCont = Canvas(self.file, highlightthickness=0)
 		fileNameCont.grid(row=0,column=1,padx=1, pady=1,sticky=W)
@@ -281,7 +295,8 @@ class InterfaceGraphe():
 		self.labelMaxvel.grid(row = 4, column = 2,padx=10, pady=1,sticky=W)
 
 
-		# Les boutons pour Menu
+
+		# Buttons for the Menu
 
 		bou1 = ttk.Button(self.menu, text = self.language[tmp], width = 15, command = self.returnHome)
 		tmp += 1
@@ -314,7 +329,8 @@ class InterfaceGraphe():
 		bou7.grid(row=1, column=8,padx=2, pady=2,sticky=W)
 
 
-		# Canvas de Home
+
+		# Home canvas
 
 		Label(self.can_home, text = self.language[tmp], font=(None, 30)).grid(sticky = W, row = 0, column = 0, padx = 10, pady = 10)
 		tmp += 1
@@ -323,7 +339,6 @@ class InterfaceGraphe():
 
 		label = Label(langCanvas, text = self.language[tmp_lang])
 		label.grid(row = 0, column = 1,pady=1,sticky=W)
-
 
 		listFrame = Frame(langCanvas)
 		listFrame.grid(row = 1, column =1,pady=1,sticky=W)
@@ -345,7 +360,8 @@ class InterfaceGraphe():
 		langCanvas.grid(row = 1, column = 0,padx = 10,pady=50,sticky=W)
 
 
-		# Canvas de Data
+
+		# Data selection canvas
 
 		fileCan = Canvas(self.can_data, highlightthickness=0)
 
@@ -397,7 +413,8 @@ class InterfaceGraphe():
 		self.loading1.grid(row = 7, column = 0,padx=10, pady=1,sticky=W)
 
 
-		# Canvas de Plot 2D
+
+		# Particles energy plotting canvas
 
 		fig = plt.figure(1)
 		self.graph = FigureCanvasTkAgg(fig, master = self.can_plot)
@@ -416,9 +433,9 @@ class InterfaceGraphe():
 		tmp += 1
 		label.grid(row=1,column=1)
 
-		x = Radiobutton (radio, text="X", variable = self.boxe_prise_2, value = "x", command=self.SliceFace)
-		y = Radiobutton (radio, text="Y", variable = self.boxe_prise_2, value = "y", command=self.SliceFace)
-		z = Radiobutton (radio, text="Z", variable = self.boxe_prise_2, value = "z", command=self.SliceFace)
+		x = Radiobutton (radio, text="X", variable = self.boxe_prise_2, value = "x", command=self.sliceFace)
+		y = Radiobutton (radio, text="Y", variable = self.boxe_prise_2, value = "y", command=self.sliceFace)
+		z = Radiobutton (radio, text="Z", variable = self.boxe_prise_2, value = "z", command=self.sliceFace)
 
 		x.grid(row=1,column=2)
 		y.grid(row=1,column=3)
@@ -476,7 +493,7 @@ class InterfaceGraphe():
 		self.loading2 = Label(self.menuFig)
 		self.loading2.grid(row = 18, column = 1,padx=10, pady=1,sticky=W)
 
-		clustering = ttk.Button(self.menuFig, text="Clusters", width = 15, command = self.Kmeans)
+		clustering = ttk.Button(self.menuFig, text="Clusters", width = 15, command = self.meanShift)
 		clustering.grid(row = 20, column =1,padx=10,pady=1,sticky=W)
 
 		self.nbrclusters = Label(self.menuFig)
@@ -499,7 +516,9 @@ class InterfaceGraphe():
 
 		self.createPlot()
 
-		# Canvas de l'histogramme
+
+
+		# Energy histogram canvas
 
 		fig = plt.figure(2)
 		self.canvas = FigureCanvasTkAgg(fig, master = self.can_histo)
@@ -536,7 +555,8 @@ class InterfaceGraphe():
 		self.menuFig_2.pack(side = "right")
 
 
-		# Canvas de Plot Velocity
+
+		# Particles velocity plotting canvas
 
 		fig3 = plt.figure(3)
 		self.graphvel = FigureCanvasTkAgg(fig3, master = self.can_plotvel)
@@ -545,19 +565,19 @@ class InterfaceGraphe():
 		self.menuFigVel = Canvas(self.can_plotvel, width = 300, highlightthickness=0)
 		self.menuFigVel.pack(side='right', fill='both', expand=1)
 
-		self.nb_labelvel = Label(self.menuFigVel, text = "Particles find" + str(self.nb))
-		#tmp += 1
+		self.nb_labelvel = Label(self.menuFigVel, text = self.language[tmp_vel] + str(self.nb))
+		tmp_vel += 1
 		self.nb_labelvel.grid(row=0,column=1, padx=10, pady=10,sticky=W)
 
 		radio = Canvas(self.menuFigVel)
 
-		label = Label(radio, text="Face : ")
-		#tmp += 1
+		label = Label(radio, text=self.language[tmp_vel])
+		tmp_vel += 1
 		label.grid(row=1,column=1)
 
-		x = Radiobutton (radio, text="X", variable = self.boxe_prise_2, value = "x", command=self.SliceFace)
-		y = Radiobutton (radio, text="Y", variable = self.boxe_prise_2, value = "y", command=self.SliceFace)
-		z = Radiobutton (radio, text="Z", variable = self.boxe_prise_2, value = "z", command=self.SliceFace)
+		x = Radiobutton (radio, text="X", variable = self.boxe_prise_2, value = "x", command=self.sliceFace)
+		y = Radiobutton (radio, text="Y", variable = self.boxe_prise_2, value = "y", command=self.sliceFace)
+		z = Radiobutton (radio, text="Z", variable = self.boxe_prise_2, value = "z", command=self.sliceFace)
 
 		x.grid(row=1,column=2)
 		y.grid(row=1,column=3)
@@ -584,7 +604,7 @@ class InterfaceGraphe():
 
 
 		label2 = Label(self.menuFigVel, text = "Velocity from :")
-		#tmp += 1
+		tmp_vel += 1
 		label2.grid(row = 9, column = 1,padx=10, pady=1,sticky=W)
 
 		self.sliceValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.0000000001, length=250, from_=self.minvel, to=self.maxvel)
@@ -594,8 +614,8 @@ class InterfaceGraphe():
 		self.errorvelocity.grid(row = 12, column = 1,padx=10, pady=1,sticky=W)
 
 
-		label3 = Label(self.menuFigVel, text ="to :")
-		#tmp += 1
+		label3 = Label(self.menuFigVel, text =self.language[tmp_vel])
+		tmp_vel += 1
 		label3.grid(row = 13, column = 1,padx=10, pady=1,sticky=W)
 
 
@@ -606,8 +626,8 @@ class InterfaceGraphe():
 		self.errorDeltavel = Label(self.menuFigVel,fg='red')
 		self.errorDeltavel.grid(row = 16, column = 1,padx=10, pady=1,sticky=W)
 	
-		valid = Button(self.menuFigVel, text = "OK", width = 10)
-		#tmp += 1
+		valid = Button(self.menuFigVel, text = self.language[tmp_vel], width = 10)
+		tmp_vel += 1
 		self.root.bind('<Return>', self.plotPartButtonVel)
 		valid.bind('<Button-1>', self.plotPartButtonVel)
 		valid.grid(row = 17, column = 1,padx = 10,pady=2,sticky=W)
@@ -617,15 +637,15 @@ class InterfaceGraphe():
 
 		saveCanvas = Canvas(self.menuFigVel, highlightthickness=0)
 
-		label = Label(saveCanvas, text = "Save as")
-		#tmp += 1
+		label = Label(saveCanvas, text = self.language[tmp_vel])
+		tmp_vel += 1
 		label.grid(row = 0, column = 1,pady=1,sticky=W)
 
 		self.saveName3 = Entry(saveCanvas)
 		self.saveName3.grid(row = 1, column = 1,pady=1,sticky=W)
 
-		saveBut = ttk.Button(saveCanvas, text="Save", width = 15, command = self.savePlt3)
-		#tmp += 1
+		saveBut = ttk.Button(saveCanvas, text=self.language[tmp_vel], width = 15, command = self.savePlt3)
+		tmp_vel += 1
 		saveBut.grid(row = 2, column =1,pady=1,sticky=W)
 
 		saveCanvas.grid(row = 19, column = 1,padx = 10,pady=50,sticky=W)
@@ -633,7 +653,8 @@ class InterfaceGraphe():
 		self.createPlotVel()
 
 
-		# Canvas de l'histogramme velocity
+
+		# Velocity histogram canvas
 
 		fig4 = plt.figure(4)
 		self.canvasvel = FigureCanvasTkAgg(fig4, master = self.can_histovel)
@@ -669,12 +690,13 @@ class InterfaceGraphe():
 
 		self.menuFig_4.pack(side = "right")
 
-		
 
+
+		
+	# Canvas updating function
 	def updateCanvas(self):
 
-		# Canvas de Plot 2D
-
+		# Particles energy plotting canvas
 
 		self.sliceValue = Scale(self.menuFig, orient='horizontal', sliderlength = 10, resolution=0.000000000000001, length=250, from_=self.min, to=self.max)
 		self.sliceValue.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
@@ -684,8 +706,9 @@ class InterfaceGraphe():
 
 		self.createPlot()
 
-		# Canvas de l'histogramme
 
+
+		# Energy histogram canvas
 
 		slide = Canvas(self.menuFig_2, highlightthickness=0)
 
@@ -702,8 +725,9 @@ class InterfaceGraphe():
 
 		self.menuFig_2.pack(side = "right")
 
-		# Canvas de Plot Velocity
 
+
+		# Particles velocity plotting canvas
 
 		self.sliceValuevel = Scale(self.menuFigVel, orient='horizontal', sliderlength = 10, resolution=0.000000000001, length=250, from_=self.minvel, to=self.maxvel)
 		self.sliceValuevel.grid(row = 11,column = 1,padx=10, pady=1,sticky=W)
@@ -713,8 +737,9 @@ class InterfaceGraphe():
 
 		self.createPlotVel()
 
-		# Canvas de l'histogramme
 
+
+		# Velocity histogram canvas
 
 		slide = Canvas(self.menuFig_4, highlightthickness=0)
 
@@ -732,70 +757,9 @@ class InterfaceGraphe():
 		self.menuFig_4.pack(side = "right")
 
 
-	def onpick1(self,event):
-		thisline = event.artist
-		ind = event.ind
-		
-		if (self.boxe_prise_2.get() == 'x'):
-			self.y=self.centers[ind[0]][0]
-			self.z=self.centers[ind[0]][1]
-			self.x=self.centers[ind[0]][2]
-		elif (self.boxe_prise_2.get() == 'y'):
-			self.y=self.centers[ind[0]][2]
-			self.z=self.centers[ind[0]][1]
-			self.x=self.centers[ind[0]][0]
-		elif (self.boxe_prise_2.get() == 'z'):
-			self.y=self.centers[ind[0]][1]
-			self.z=self.centers[ind[0]][2]
-			self.x=self.centers[ind[0]][0]
-		self.plotElec()
 
-
-	def Kmeans(self):
-		fig = plt.figure(1)
-		plt.clf()
-		if (self.boxe_prise_2.get() == 'x'):
-			plt.title('Plasma particles energy (J) Y and Z')
-			plt.xlabel('Y (cm)')
-			plt.ylabel('Z (cm)')
-		elif (self.boxe_prise_2.get() == 'y'):
-			plt.title('Plasma particles energy (J) X and Z')
-			plt.xlabel('X (cm)')
-			plt.ylabel('Z (cm)')
-		elif (self.boxe_prise_2.get() == 'z'):
-			plt.title('Plasma particles energy (J) X and Y')
-			plt.xlabel('X (cm)')
-			plt.ylabel('Y (cm)')
-		kmeans=MeanShift(bandwidth = 0.01).fit(self.clusters)
-		self.centers=kmeans.cluster_centers_
-		labels=kmeans.labels_
-		labels_unique=np.unique(labels)
-		plt.scatter(self.abss,self.ordn, c = labels, s = 10, marker = 'o', cmap = 'gist_ncar',edgecolor = 'none')
-		ax = plt.gca()
-		abscenter=[]
-		ordcenter=[]
-		for i in range(len(self.centers)):
-			l=0.0
-			h=0.0
-			for j in range(len(labels)):
-				if i==labels[j]:
-					l_tmp=abs(self.abss[j]-self.centers[i][0])
-					h_tmp=abs(self.ordn[j]-self.centers[i][1])
-					if l_tmp>l:
-						l=l_tmp
-					if h_tmp>h:
-						h=h_tmp
-			abscenter+=[self.centers[i][0]]
-			ordcenter+=[self.centers[i][1]]
-			ellipse=Ellipse((self.centers[i][0],self.centers[i][1]),width=2*l,height=2*h,color="fuchsia",fill=False,linewidth=0.5)
-			ax.add_artist(ellipse)
-		plt.plot(abscenter,ordcenter,"ro",color="fuchsia",picker="True")
-		fig.canvas.mpl_connect('pick_event', self.onpick1)
-		self.graph.draw()
-		self.nbrclusters['text'] = str(len(self.centers)) + " clusters"
-
-
-	def SliceFace(self):
+	# Function that updates the scales of the slice selection
+	def sliceFace(self):
 		if (self.boxe_prise_2.get() == 'x'):
 			self.sliceAxis1.configure(from_=0.0, to=1.2)
 			self.sliceAxis2.configure(from_=0.0, to=1.2)
@@ -813,6 +777,87 @@ class InterfaceGraphe():
 			self.sliceAxis2vel.configure(from_=0.0, to=0.05)
 
 
+
+	# Function for the file selection
+	def loadtemplate(self):
+		filename = askopenfilename(filetypes = (("NetCDF files", "*.nc"),("Data files", "*.dat"),("All files", "*.*")))
+		if filename:
+			try:
+				self.entName['text'] = filename
+			except:
+				showerror("Open Source File", "Failed to read file \n'%s'"%filename)
+				return
+
+
+
+	# Function that loads the data from the file
+	def loadData(self):
+		if os.path.exists(self.fileName):
+			self.parttab, self.tabPart, self.energy , self.velocity , self.elec = readFilePart(self.fileName, int(self.num))
+			self.slice = 0.0
+			self.Dslice = 0.0
+			self.actualSlice = ''
+			self.slicevel = 0.0
+			self.Dslicevel = 0.0
+			self.actualSlicevel = ''
+			self.max = max(self.energy)
+			self.min = min(self.energy)
+			self.maxvel = max(self.velocity)
+			self.minvel = min(self.velocity)
+
+
+
+	# Function to load the data while updtating the canvas and their information
+	def changeDataFileButton(self,event):
+		self.loading1['text'] = "Loading..."
+		self.loading1.update()
+
+		verif1 = False
+		verif2 = False
+
+		if not (os.path.exists(self.entName['text'])):
+			self.errorName['text'] = self.language[34]
+			verif1 = False
+		else :
+			self.errorName['text'] = self.language[9]
+			verif2 = True
+
+		if self.boxe_prise.get() != '1' and self.boxe_prise.get() != '2' and self.boxe_prise.get() != '3' and self.boxe_prise.get() != '4':
+			self.errorNum['text'] = self.language[35]
+			verif2 = False
+		else :
+			self.errorNum['text'] = self.language[9]
+			verif1 = True
+
+
+		if verif1 and verif2 and (self.num != int(self.boxe_prise.get()) or self.fileName != self.entName['text']):
+
+			self.fileName = self.entName['text']
+			self.fileNameLabel['text'] = self.fileName
+			self.num = int(self.boxe_prise.get())
+			self.part['text'] = self.language[36] + str(self.num)
+
+			start = time.time()
+			self.loadData()
+
+			print()
+			print("Success")
+			print("Time : ",time.time()-start,"s\n")
+
+			self.nb_part_file = int(self.parttab)
+
+			self.labelNumber['text'] = self.language[10] + str(self.nb_part_file)
+			self.labelMin['text'] = self.language[11] + str(self.min) + self.language[37]
+			self.labelMax['text'] = self.language[12] + str(self.max) + self.language[37]
+			self.labelMinvel['text'] = self.language[11] + str(self.minvel) + " cm/s"
+			self.labelMaxvel['text'] = self.language[12] + str(self.maxvel) + " cm/s"
+			self.updateCanvas()
+		self.loading1['text'] = ""
+		self.loading1.update()
+
+
+
+	# Function that plots in two dimensions the particles with their energy
 	def createPlot(self):
 		self.loading2['text'] = " Loading..."
 		self.loading2.update()
@@ -893,6 +938,8 @@ class InterfaceGraphe():
 		self.loading2['text'] = ""
 
 
+
+	# Function that verifies the conditions to plot in two dimensions the particles with their energy
 	def plotPartButton(self,event):
 
 		verif1 = False
@@ -947,84 +994,7 @@ class InterfaceGraphe():
 
 
 
-	def loadtemplate(self):
-		filename = askopenfilename(filetypes = (("NetCDF files", "*.nc"),("Data files", "*.dat"),("All files", "*.*")))
-		if filename:
-			try:
-				self.entName['text'] = filename
-			except:
-				showerror("Open Source File", "Failed to read file \n'%s'"%filename)
-				return
-
-
-
-	def loadData(self):
-		if os.path.exists(self.fileName):
-			self.parttab, self.tabPart, self.energy , self.velocity , self.elec = readFilePart(self.fileName, int(self.num))
-			self.slice = 0.0
-			self.Dslice = 0.0
-			self.actualSlice = ''
-			self.slicevel = 0.0
-			self.Dslicevel = 0.0
-			self.actualSlicevel = ''
-			self.max = max(self.energy)
-			self.min = min(self.energy)
-			self.maxvel = max(self.velocity)
-			self.minvel = min(self.velocity)
-
-
-
-	def changeDataFileButton(self,event):
-		self.loading1['text'] = "Loading..."
-		self.loading1.update()
-
-		verif1 = False
-		verif2 = False
-
-		if not (os.path.exists(self.entName['text'])):
-			self.errorName['text'] = self.language[34]
-			verif1 = False
-		else :
-			self.errorName['text'] = self.language[9]
-			verif2 = True
-
-		if self.boxe_prise.get() != '1' and self.boxe_prise.get() != '2' and self.boxe_prise.get() != '3' and self.boxe_prise.get() != '4':
-			self.errorNum['text'] = self.language[35]
-			verif2 = False
-		else :
-			self.errorNum['text'] = self.language[9]
-			verif1 = True
-
-
-		if verif1 and verif2 and (self.num != int(self.boxe_prise.get()) or self.fileName != self.entName['text']):
-
-			self.fileName = self.entName['text']
-			self.fileNameLabel['text'] = self.fileName
-			self.num = int(self.boxe_prise.get())
-			self.part['text'] = self.language[36] + str(self.num)
-
-			# Data
-
-			start = time.time()
-			self.loadData()
-
-			print()
-			print("Success")
-			print("Time : ",time.time()-start,"s\n")
-
-			self.nb_part_file = int(self.parttab)
-
-			self.labelNumber['text'] = self.language[10] + str(self.nb_part_file)
-			self.labelMin['text'] = self.language[11] + str(self.min) + self.language[37]
-			self.labelMax['text'] = self.language[12] + str(self.max) + self.language[37]
-			self.labelMinvel['text'] = self.language[11] + str(self.minvel) + " cm/s"
-			self.labelMaxvel['text'] = self.language[12] + str(self.maxvel) + " cm/s"
-			self.updateCanvas()
-		self.loading1['text'] = ""
-		self.loading1.update()
-
-
-
+	# Function that plots in two dimensions the particles with their velocity
 	def createPlotVel(self):
 		self.loading2vel['text'] = " Loading..."
 		self.loading2vel.update()
@@ -1102,24 +1072,8 @@ class InterfaceGraphe():
 		self.loading2vel['text'] = ""
 
 
-	def plotElec(self):
-		Elecwindow=Toplevel(self.can_plot)
-		Elecwindow.title('Electric Field')
-		fig5 = plt.figure(5)
-		self.graphElec = FigureCanvasTkAgg(fig5, master = Elecwindow)
-		self.graphElec.get_tk_widget().pack(side='left', expand=1, pady = 10)
 
-		plt.clf()
-		plt.title('Electric Field')
-		plt.xlabel('Position X')
-		plt.ylabel('Electric Field Ex')
-		field=self.elec[0]
-		abscissa = np.arange(int(100*self.x/1.255)-1, int(100*self.x/1.255)+2, 1)
-		axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in abscissa]
-		plt.plot(abscissa, axis, markersize=0.2, color='red')
-		self.graphElec.draw()
-
-
+	# Function that verifies the conditions to plot in two dimensions the particles with their velocity
 	def plotPartButtonVel(self,event):
 
 		verif1 = False
@@ -1170,31 +1124,127 @@ class InterfaceGraphe():
 
 		if verif2 and verif3 and verif1 and verif4 and (float(self.deltaValuevel.get()) != self.Dslicevel or float(self.sliceValuevel.get()) != self.slicevel or self.boxe_prise_2.get() != self.actualSlicevel or float(self.sliceAxis1vel.get()) != self.Axis1vel or float(self.sliceAxis2vel.get()) != self.Axis2vel):
 			self.actualSlicevel = self.boxe_prise_2.get()
-			self.createPlotVel()	
+			self.createPlotVel()
+
+
+
+	# Function to plot the Electric fiel in a cluster when clicking on its cluster center
+	def onpick1(self,event):
+		thisline = event.artist
+		ind = event.ind
+		
+		if (self.boxe_prise_2.get() == 'x'):
+			self.y=self.centers[ind[0]][0]
+			self.z=self.centers[ind[0]][1]
+			self.x=self.centers[ind[0]][2]
+		elif (self.boxe_prise_2.get() == 'y'):
+			self.y=self.centers[ind[0]][2]
+			self.z=self.centers[ind[0]][1]
+			self.x=self.centers[ind[0]][0]
+		elif (self.boxe_prise_2.get() == 'z'):
+			self.y=self.centers[ind[0]][1]
+			self.z=self.centers[ind[0]][2]
+			self.x=self.centers[ind[0]][0]
+		self.plotElec()
 
 
 
 
+	# Function that finds the cluster and that plots them
+	def meanShift(self):
+		fig = plt.figure(1)
+		plt.clf()
+		if (self.boxe_prise_2.get() == 'x'):
+			plt.title('Plasma particles energy (J) Y and Z')
+			plt.xlabel('Y (cm)')
+			plt.ylabel('Z (cm)')
+		elif (self.boxe_prise_2.get() == 'y'):
+			plt.title('Plasma particles energy (J) X and Z')
+			plt.xlabel('X (cm)')
+			plt.ylabel('Z (cm)')
+		elif (self.boxe_prise_2.get() == 'z'):
+			plt.title('Plasma particles energy (J) X and Y')
+			plt.xlabel('X (cm)')
+			plt.ylabel('Y (cm)')
+		means=MeanShift(bandwidth = 0.01).fit(self.clusters)
+		self.centers=means.cluster_centers_
+		labels=means.labels_
+		labels_unique=np.unique(labels)
+		plt.scatter(self.abss,self.ordn, c = labels, s = 10, marker = 'o', cmap = 'gist_ncar',edgecolor = 'none')
+		ax = plt.gca()
+		abscenter=[]
+		ordcenter=[]
+		for i in range(len(self.centers)):
+			l=0.0
+			h=0.0
+			for j in range(len(labels)):
+				if i==labels[j]:
+					l_tmp=abs(self.abss[j]-self.centers[i][0])
+					h_tmp=abs(self.ordn[j]-self.centers[i][1])
+					if l_tmp>l:
+						l=l_tmp
+					if h_tmp>h:
+						h=h_tmp
+			abscenter+=[self.centers[i][0]]
+			ordcenter+=[self.centers[i][1]]
+			ellipse=Ellipse((self.centers[i][0],self.centers[i][1]),width=2*l,height=2*h,color="fuchsia",fill=False,linewidth=0.5)
+			ax.add_artist(ellipse)
+		plt.plot(abscenter,ordcenter,"ro",color="fuchsia",picker="True")
+		fig.canvas.mpl_connect('pick_event', self.onpick1)
+		self.graph.draw()
+		self.nbrclusters['text'] = str(len(self.centers)) + " clusters"
+
+
+
+	# Function that plots the Electric fiel in a cluster
+	def plotElec(self):
+		Elecwindow=Toplevel(self.can_plot)
+		Elecwindow.title('Electric Field')
+		fig5 = plt.figure(5)
+		self.graphElec = FigureCanvasTkAgg(fig5, master = Elecwindow)
+		self.graphElec.get_tk_widget().pack(side='left', expand=1, pady = 10)
+
+		plt.clf()
+		plt.title('Electric Field')
+		plt.xlabel('Position X')
+		plt.ylabel('Electric Field Ex')
+		field=self.elec[0]
+		abscissa = np.arange(int(100*self.x/1.255)-1, int(100*self.x/1.255)+2, 1)
+		axis = [] + [field[i][int(100*self.y)][int(100*self.z)] for i in abscissa]
+		plt.plot(abscissa, axis, markersize=0.2, color='red')
+		self.graphElec.draw()
+
+
+
+	# Function that saves the two dimensions graph of the particles with their energy
 	def savePlt(self):
 		plt.figure(1)
 		plt.savefig(self.saveName1.get())
 
 
+
+	# Function that saves the energy histogram
 	def savePlt2(self):
 		plt.figure(2)
 		plt.savefig(self.saveName2.get())
 
 
+
+	# Function that saves the two dimensions graph of the particles with their velocity
 	def savePlt3(self):
 		plt.figure(3)
 		plt.savefig(self.saveName3.get())
 
 
+
+	# Function that saves the velocity histogram
 	def savePlt4(self):
 		plt.figure(4)
 		plt.savefig(self.saveName4.get())
 
 
+
+	# Function that creates the energy histogram
 	def slideValue(self, val):
 		plt.figure(2)
 		plt.clf()
@@ -1213,6 +1263,8 @@ class InterfaceGraphe():
 		self.scalevalue = val
 
 
+
+	# Function that creates the velocity histogram
 	def slideValueVel(self, val):
 		plt.figure(4)
 		plt.clf()
@@ -1232,9 +1284,11 @@ class InterfaceGraphe():
 
 
 
+	# Function to open the data selection canvas
 	def changeDataFile(self):
 		self.root.unbind('<Return>')
 		self.menu['width'] = 1000
+		self.can_data.grid(row=3,column=1,padx=1, pady=1,sticky=W)
 
 		self.can_home.grid_remove()
 		self.can_plot.grid_remove()
@@ -1242,11 +1296,13 @@ class InterfaceGraphe():
 		self.can_histovel.grid_remove()
 		self.can_plotvel.grid_remove()
 
-		
-		self.can_data.grid(row=3,column=1,padx=1, pady=1,sticky=W)
+		self.entete = Label(self.title,text = self.entete_data, font=(None, 15))
+		self.entete.grid(row = 0, column = 0 ,padx=10)
 
 
 
+
+	# Function to open the two dimensions plotting of the particles with their energy canvas
 	def plotPart(self, event):
 		if os.path.exists(self.fileName):
 			self.root.unbind('<Return>')
@@ -1258,14 +1314,17 @@ class InterfaceGraphe():
 			self.can_histovel.grid_remove()
 			self.can_data.grid_remove()
 			self.can_plotvel.grid_remove()
-			
+
+			self.entete = Label(self.title,text = self.entete_plot, font=(None, 15))
+			self.entete.grid(row = 0, column = 0 ,padx=10)
 
 
+
+	# Function to open the energy historgram canvas
 	def histo(self):
 		if os.path.exists(self.fileName):
 			self.root.unbind('<Return>')
 			self.menu['width'] = 1500
-
 			self.can_histo.grid(row=3,column=1,padx=1, pady=1)
 
 			self.can_histovel.grid_remove()
@@ -1274,6 +1333,12 @@ class InterfaceGraphe():
 			self.can_data.grid_remove()
 			self.can_plotvel.grid_remove()
 
+			self.entete = Label(self.title,text = self.entete_histo, font=(None, 15))
+			self.entete.grid(row = 0, column = 0 ,padx=10)
+
+
+
+	# Function to open the two dimensions plotting of the particles with their velocity canvas
 	def plotPartVel(self, event):
 		if os.path.exists(self.fileName):
 			self.root.unbind('<Return>')
@@ -1286,11 +1351,16 @@ class InterfaceGraphe():
 			self.can_histovel.grid_remove()
 			self.can_data.grid_remove()
 
+			self.entete = Label(self.title,text = self.entete_plotvel, font=(None, 15))
+			self.entete.grid(row = 0, column = 0 ,padx=10)
+
+
+
+	# Function to open the velocity historgram canvas
 	def histovel(self):
 		if os.path.exists(self.fileName):
 			self.root.unbind('<Return>')
 			self.menu['width'] = 1500
-
 			self.can_histovel.grid(row=3,column=1,padx=1, pady=1)
 
 			self.can_histo.grid_remove()
@@ -1299,12 +1369,15 @@ class InterfaceGraphe():
 			self.can_data.grid_remove()
 			self.can_plotvel.grid_remove()
 
+			self.entete = Label(self.title,text = self.entete_histovel, font=(None, 15))
+			self.entete.grid(row = 0, column = 0 ,padx=10)
 
 
+
+	# Function to open the home canvas
 	def returnHome(self):
 		self.root.unbind('<Return>')
 		self.menu['width'] = 1000
-
 		self.can_home.grid(row=3,column=1,padx=1, pady=1)
 		self.can_home.grid_propagate(0)
 
@@ -1314,6 +1387,8 @@ class InterfaceGraphe():
 		self.can_data.grid_remove()
 		self.can_plotvel.grid_remove()
 
+		self.entete = Label(self.title,text = self.entete_home, font=(None, 15))
+		self.entete.grid(row = 0, column = 0 ,padx=10)
 
 
 

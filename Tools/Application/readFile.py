@@ -7,6 +7,7 @@ import numpy.ma as ma
 
 
 
+# Function to read .nc files
 def readFilePartNC(nameFile, n):
 	start = time.time()
 
@@ -135,6 +136,10 @@ def readFilePartNC(nameFile, n):
 	
 		return (part,tabPart,energy,velocity,elec)
 
+
+
+
+
 def createFormatInt8(size):
 	form = "<l"
 	for h in range(0,size):
@@ -142,6 +147,9 @@ def createFormatInt8(size):
 	form += "l"
 	return form
 
+
+
+# Function to read .dat files
 def readFilePartDat(nameFile, n):
 	start = time.time()
 
@@ -345,6 +353,10 @@ def readFilePartDat(nameFile, n):
 	
 		return (size,tabPart,energy,velocity,elec)
 
+
+
+
+# Function to read a file
 def readFilePart(nameFile, n):
 	if (nameFile.split(".")[1]=="nc"):
 		[part,tabPart,energy,velocity,elec]=readFilePartNC(nameFile, n)
