@@ -1296,8 +1296,7 @@ class InterfaceGraphe():
 		self.can_histovel.grid_remove()
 		self.can_plotvel.grid_remove()
 
-		self.entete = Label(self.title,text = self.entete_data, font=(None, 15))
-		self.entete.grid(row = 0, column = 0 ,padx=10)
+		self.entete["text"] = self.entete_data
 
 
 
@@ -1315,8 +1314,7 @@ class InterfaceGraphe():
 			self.can_data.grid_remove()
 			self.can_plotvel.grid_remove()
 
-			self.entete = Label(self.title,text = self.entete_plot, font=(None, 15))
-			self.entete.grid(row = 0, column = 0 ,padx=10)
+			self.entete["text"] = self.entete_plot
 
 
 
@@ -1333,8 +1331,7 @@ class InterfaceGraphe():
 			self.can_data.grid_remove()
 			self.can_plotvel.grid_remove()
 
-			self.entete = Label(self.title,text = self.entete_histo, font=(None, 15))
-			self.entete.grid(row = 0, column = 0 ,padx=10)
+			self.entete["text"] = self.entete_histo
 
 
 
@@ -1351,8 +1348,7 @@ class InterfaceGraphe():
 			self.can_histovel.grid_remove()
 			self.can_data.grid_remove()
 
-			self.entete = Label(self.title,text = self.entete_plotvel, font=(None, 15))
-			self.entete.grid(row = 0, column = 0 ,padx=10)
+			self.entete["text"] = self.entete_plotvel
 
 
 
@@ -1369,8 +1365,7 @@ class InterfaceGraphe():
 			self.can_data.grid_remove()
 			self.can_plotvel.grid_remove()
 
-			self.entete = Label(self.title,text = self.entete_histovel, font=(None, 15))
-			self.entete.grid(row = 0, column = 0 ,padx=10)
+			self.entete["text"] = self.entete_histovel
 
 
 
@@ -1387,8 +1382,7 @@ class InterfaceGraphe():
 		self.can_data.grid_remove()
 		self.can_plotvel.grid_remove()
 
-		self.entete = Label(self.title,text = self.entete_home, font=(None, 15))
-		self.entete.grid(row = 0, column = 0 ,padx=10)
+		self.entete["text"] = self.entete_home
 
 
 
