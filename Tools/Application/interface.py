@@ -662,7 +662,7 @@ class InterfaceGraphe():
 
 		self.menuFig_4 = Canvas(self.can_histovel)
 
-		saveCanvas = Canvas(self.menuFig_2, highlightthickness=0)
+		saveCanvas = Canvas(self.menuFig_4, highlightthickness=0)
 
 		label = Label(saveCanvas, text = self.language[tmp_save])
 		label.grid(row = 0, column = 1,pady=1,sticky=W)
@@ -675,7 +675,7 @@ class InterfaceGraphe():
 
 		saveCanvas.grid(row = 0, column = 0,padx = 10,pady=50,sticky=W)
 
-		slide = Canvas(self.menuFig_2, highlightthickness=0)
+		slide = Canvas(self.menuFig_4, highlightthickness=0)
 
 		scale = Scale(slide, orient='vertical', sliderlength = 30, tickinterval = 49, length=600, from_=1, to=300, command = self.slideValueVel)
 		scale.set(self.scalevaluevel)
